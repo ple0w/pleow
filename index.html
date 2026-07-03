@@ -968,6 +968,45 @@ img, svg, .eq, .sp-bar, .sp-fill { text-shadow: none; }
   .sf-stats { grid-template-columns: repeat(2, 1fr); }
 }
   .pageviews { display: none; }
+
+/* ===== visitor map page ===== */
+.map-wrap { max-width: 1100px; margin: 0 auto; padding: 0 34px 40px; }
+.map-panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: relative; }
+.map-panel::before { content:''; position:absolute; top:-1px; left:-1px; width:14px; height:14px;
+  border-top:2px solid var(--accent); border-left:2px solid var(--accent); border-top-left-radius:6px; opacity:.5; pointer-events:none; }
+.map-panel::after { content:''; position:absolute; bottom:-1px; right:-1px; width:14px; height:14px;
+  border-bottom:2px solid var(--accent); border-right:2px solid var(--accent); border-bottom-right-radius:6px; opacity:.5; pointer-events:none; }
+.map-panel-head { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--line); }
+.map-panel-head .ph-name { font-family:var(--mono); font-size:.72rem; letter-spacing:.18em; color:var(--text); display:flex; align-items:center; gap:8px; }
+.map-panel-head .ph-name::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); }
+.map-controls { display:flex; gap:6px; }
+.map-controls button { font-family:var(--mono); font-size:.7rem; color:var(--muted); background:rgba(255,255,255,0.04);
+  border:1px solid var(--line); border-radius:8px; padding:5px 10px; cursor:none; transition:all .18s; }
+.map-controls button:hover { color:var(--text); border-color:var(--accent); }
+.map-stage { position:relative; padding:8px; }
+#map { width:100%; height:auto; display:block; }
+#map path.country { fill:rgba(255,255,255,0.045); stroke:rgba(255,255,255,0.16); stroke-width:.35px; transition:fill .18s, stroke .18s; }
+#map path.country.visited { stroke:rgba(74,163,232,0.85); stroke-width:.5px; }
+#map path.country.hover { stroke:#fff; stroke-width:.9px; }
+#map path.country.selected { stroke:var(--green,#2ecc71); stroke-width:1.3px; }
+.map-tip { position:absolute; pointer-events:none; z-index:20; background:var(--card-solid); border:1px solid var(--line);
+  border-radius:9px; padding:8px 11px; font-family:var(--mono); font-size:.7rem; line-height:1.5; opacity:0; transform:translateY(4px);
+  transition:opacity .12s, transform .12s; white-space:nowrap; box-shadow:0 8px 24px rgba(0,0,0,.4); }
+.map-tip.show { opacity:1; transform:translateY(0); }
+.map-tip .tt-name { color:var(--accent); font-weight:600; }
+.map-tip .tt-count { color:var(--text); }
+.map-tip .tt-empty { color:var(--muted); }
+.map-hint { font-family:var(--mono); font-size:.62rem; letter-spacing:.06em; color:var(--muted); padding:2px 18px 14px; }
+.stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:18px; }
+.stat-card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px 20px;
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); position:relative; overflow:hidden; }
+.stat-card .sc-line { position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--accent),transparent); opacity:.6; }
+.stat-card .sc-label { font-family:var(--mono); font-size:.6rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); }
+.stat-card .sc-value { font-size:2rem; font-weight:700; font-style:italic; letter-spacing:-0.02em; margin-top:6px; }
+.stat-card .sc-sub { color:var(--muted); font-size:.8rem; margin-top:2px; }
+.stat-card.sel .sc-value { font-size:1.35rem; font-style:normal; color:var(--green,#2ecc71); }
+@media (max-width:720px){ .stat-row{ grid-template-columns:1fr; } .map-wrap{ padding:0 16px 30px; } }
 </style>
 </head>
 <body>
@@ -992,6 +1031,7 @@ img, svg, .eq, .sp-bar, .sp-fill { text-shadow: none; }
       <a href="#activity" data-page="activity" data-cursor data-i18n="navActivity">activity</a>
       <a href="#music" data-page="music" data-cursor data-i18n="navMusic">music</a>
       <a href="#gear" data-page="gear" data-cursor data-i18n="navGear">gear</a>
+      <a href="#map" data-page="map" data-cursor data-i18n="navMap">map</a>
       <a href="#cv" data-page="cv" data-cursor data-i18n="navCv">cv</a>
     </nav>
     <div class="pageviews" id="pageViews" title="views">
@@ -1286,10 +1326,170 @@ img, svg, .eq, .sp-bar, .sp-fill { text-shadow: none; }
     </div>
   </div>
 </div>
+<div class="page" id="page-map">
+  <div class="page-head">
+    <div class="ph-label" data-i18n="navMap">map</div>
+    <h1 data-i18n="mapH1">visitor map</h1>
+    <p data-i18n="mapSub">look mom, i'm around the world.</p>
+  </div>
+  <div class="map-wrap">
+    <div class="map-panel reveal d1">
+      <div class="map-panel-head">
+        <div class="ph-name" data-i18n="mapWorld">WORLD</div>
+        <div class="map-controls">
+          <button id="zoomIn" data-cursor>+</button>
+          <button id="zoomOut" data-cursor>&minus;</button>
+          <button id="zoomReset" data-cursor data-i18n="mapReset">Reset</button>
+        </div>
+      </div>
+      <div class="map-stage">
+        <svg id="map" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="visitor map"></svg>
+        <div class="map-tip" id="mapTip"></div>
+      </div>
+      <div class="map-hint" data-i18n="mapHint">Scroll to zoom, drag to pan, click a country for visitor count.</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-card reveal d1"><div class="sc-line"></div>
+        <div class="sc-label" data-i18n="statTotal">Total Visits</div>
+        <div class="sc-value" id="statTotal">&mdash;</div>
+      </div>
+      <div class="stat-card reveal d2"><div class="sc-line"></div>
+        <div class="sc-label" data-i18n="statCountries">Countries</div>
+        <div class="sc-value" id="statCountries">&mdash;</div>
+        <div class="sc-sub" id="statCountriesSub"></div>
+      </div>
+      <div class="stat-card sel reveal d3"><div class="sc-line"></div>
+        <div class="sc-label" data-i18n="statSelected">Selected</div>
+        <div class="sc-value" id="statSelected">&mdash;</div>
+      </div>
+    </div>
+  </div>
+</div>
 <footer class="footer">
   <div class="footer-word" id="footerWord">PLEOW</div>
   <div class="footer-credit" id="footerCredit">DESIGNED &amp; BUILT BY PLEOW // 2026</div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<script>
+/* ===== PLEOW VISITOR MAP ===== */
+const MAP_WORKER = 'https://pleow-site.pqkalem.workers.dev';
+const NUM2A2 = {"533": "AW", "4": "AF", "24": "AO", "660": "AI", "248": "AX", "8": "AL", "20": "AD", "784": "AE", "32": "AR", "51": "AM", "16": "AS", "10": "AQ", "260": "TF", "28": "AG", "36": "AU", "40": "AT", "31": "AZ", "108": "BI", "56": "BE", "204": "BJ", "535": "BQ", "854": "BF", "50": "BD", "100": "BG", "48": "BH", "44": "BS", "70": "BA", "652": "BL", "112": "BY", "84": "BZ", "60": "BM", "68": "BO", "76": "BR", "52": "BB", "96": "BN", "64": "BT", "74": "BV", "72": "BW", "140": "CF", "124": "CA", "166": "CC", "756": "CH", "152": "CL", "156": "CN", "384": "CI", "120": "CM", "180": "CD", "178": "CG", "184": "CK", "170": "CO", "174": "KM", "132": "CV", "188": "CR", "192": "CU", "531": "CW", "162": "CX", "136": "KY", "196": "CY", "203": "CZ", "276": "DE", "262": "DJ", "212": "DM", "208": "DK", "214": "DO", "12": "DZ", "218": "EC", "818": "EG", "232": "ER", "732": "EH", "724": "ES", "233": "EE", "231": "ET", "246": "FI", "242": "FJ", "238": "FK", "250": "FR", "234": "FO", "583": "FM", "266": "GA", "826": "GB", "268": "GE", "831": "GG", "288": "GH", "292": "GI", "324": "GN", "312": "GP", "270": "GM", "624": "GW", "226": "GQ", "300": "GR", "308": "GD", "304": "GL", "320": "GT", "254": "GF", "316": "GU", "328": "GY", "344": "HK", "334": "HM", "340": "HN", "191": "HR", "332": "HT", "348": "HU", "360": "ID", "833": "IM", "356": "IN", "86": "IO", "372": "IE", "364": "IR", "368": "IQ", "352": "IS", "376": "IL", "380": "IT", "388": "JM", "832": "JE", "400": "JO", "392": "JP", "398": "KZ", "404": "KE", "417": "KG", "116": "KH", "296": "KI", "659": "KN", "410": "KR", "414": "KW", "418": "LA", "422": "LB", "430": "LR", "434": "LY", "662": "LC", "438": "LI", "144": "LK", "426": "LS", "440": "LT", "442": "LU", "428": "LV", "446": "MO", "663": "MF", "504": "MA", "492": "MC", "498": "MD", "450": "MG", "462": "MV", "484": "MX", "584": "MH", "807": "MK", "466": "ML", "470": "MT", "104": "MM", "499": "ME", "496": "MN", "580": "MP", "508": "MZ", "478": "MR", "500": "MS", "474": "MQ", "480": "MU", "454": "MW", "458": "MY", "175": "YT", "516": "NA", "540": "NC", "562": "NE", "574": "NF", "566": "NG", "558": "NI", "570": "NU", "528": "NL", "578": "NO", "524": "NP", "520": "NR", "554": "NZ", "512": "OM", "586": "PK", "591": "PA", "612": "PN", "604": "PE", "608": "PH", "585": "PW", "598": "PG", "616": "PL", "630": "PR", "408": "KP", "620": "PT", "600": "PY", "275": "PS", "258": "PF", "634": "QA", "638": "RE", "642": "RO", "643": "RU", "646": "RW", "682": "SA", "729": "SD", "686": "SN", "702": "SG", "239": "GS", "654": "SH", "744": "SJ", "90": "SB", "694": "SL", "222": "SV", "674": "SM", "706": "SO", "666": "PM", "688": "RS", "728": "SS", "678": "ST", "740": "SR", "703": "SK", "705": "SI", "752": "SE", "748": "SZ", "534": "SX", "690": "SC", "760": "SY", "796": "TC", "148": "TD", "768": "TG", "764": "TH", "762": "TJ", "772": "TK", "795": "TM", "626": "TL", "776": "TO", "780": "TT", "788": "TN", "792": "TR", "798": "TV", "158": "TW", "834": "TZ", "800": "UG", "804": "UA", "581": "UM", "858": "UY", "840": "US", "860": "UZ", "336": "VA", "670": "VC", "862": "VE", "92": "VG", "850": "VI", "704": "VN", "548": "VU", "876": "WF", "882": "WS", "887": "YE", "710": "ZA", "894": "ZM", "716": "ZW"};
+const A2NAME = {"AW": "Aruba", "AF": "Afghanistan", "AO": "Angola", "AI": "Anguilla", "AX": "Åland Islands", "AL": "Albania", "AD": "Andorra", "AE": "United Arab Emirates", "AR": "Argentina", "AM": "Armenia", "AS": "American Samoa", "AQ": "Antarctica", "TF": "French Southern Territories", "AG": "Antigua and Barbuda", "AU": "Australia", "AT": "Austria", "AZ": "Azerbaijan", "BI": "Burundi", "BE": "Belgium", "BJ": "Benin", "BQ": "Bonaire, Sint Eustatius and Saba", "BF": "Burkina Faso", "BD": "Bangladesh", "BG": "Bulgaria", "BH": "Bahrain", "BS": "Bahamas", "BA": "Bosnia and Herzegovina", "BL": "Saint Barthélemy", "BY": "Belarus", "BZ": "Belize", "BM": "Bermuda", "BO": "Bolivia", "BR": "Brazil", "BB": "Barbados", "BN": "Brunei Darussalam", "BT": "Bhutan", "BV": "Bouvet Island", "BW": "Botswana", "CF": "Central African Republic", "CA": "Canada", "CC": "Cocos (Keeling) Islands", "CH": "Switzerland", "CL": "Chile", "CN": "China", "CI": "Côte d'Ivoire", "CM": "Cameroon", "CD": "Congo, The Democratic Republic of the", "CG": "Congo", "CK": "Cook Islands", "CO": "Colombia", "KM": "Comoros", "CV": "Cabo Verde", "CR": "Costa Rica", "CU": "Cuba", "CW": "Curaçao", "CX": "Christmas Island", "KY": "Cayman Islands", "CY": "Cyprus", "CZ": "Czechia", "DE": "Germany", "DJ": "Djibouti", "DM": "Dominica", "DK": "Denmark", "DO": "Dominican Republic", "DZ": "Algeria", "EC": "Ecuador", "EG": "Egypt", "ER": "Eritrea", "EH": "Western Sahara", "ES": "Spain", "EE": "Estonia", "ET": "Ethiopia", "FI": "Finland", "FJ": "Fiji", "FK": "Falkland Islands (Malvinas)", "FR": "France", "FO": "Faroe Islands", "FM": "Micronesia, Federated States of", "GA": "Gabon", "GB": "United Kingdom", "GE": "Georgia", "GG": "Guernsey", "GH": "Ghana", "GI": "Gibraltar", "GN": "Guinea", "GP": "Guadeloupe", "GM": "Gambia", "GW": "Guinea-Bissau", "GQ": "Equatorial Guinea", "GR": "Greece", "GD": "Grenada", "GL": "Greenland", "GT": "Guatemala", "GF": "French Guiana", "GU": "Guam", "GY": "Guyana", "HK": "Hong Kong", "HM": "Heard Island and McDonald Islands", "HN": "Honduras", "HR": "Croatia", "HT": "Haiti", "HU": "Hungary", "ID": "Indonesia", "IM": "Isle of Man", "IN": "India", "IO": "British Indian Ocean Territory", "IE": "Ireland", "IR": "Iran", "IQ": "Iraq", "IS": "Iceland", "IL": "Israel", "IT": "Italy", "JM": "Jamaica", "JE": "Jersey", "JO": "Jordan", "JP": "Japan", "KZ": "Kazakhstan", "KE": "Kenya", "KG": "Kyrgyzstan", "KH": "Cambodia", "KI": "Kiribati", "KN": "Saint Kitts and Nevis", "KR": "South Korea", "KW": "Kuwait", "LA": "Laos", "LB": "Lebanon", "LR": "Liberia", "LY": "Libya", "LC": "Saint Lucia", "LI": "Liechtenstein", "LK": "Sri Lanka", "LS": "Lesotho", "LT": "Lithuania", "LU": "Luxembourg", "LV": "Latvia", "MO": "Macao", "MF": "Saint Martin (French part)", "MA": "Morocco", "MC": "Monaco", "MD": "Moldova", "MG": "Madagascar", "MV": "Maldives", "MX": "Mexico", "MH": "Marshall Islands", "MK": "North Macedonia", "ML": "Mali", "MT": "Malta", "MM": "Myanmar", "ME": "Montenegro", "MN": "Mongolia", "MP": "Northern Mariana Islands", "MZ": "Mozambique", "MR": "Mauritania", "MS": "Montserrat", "MQ": "Martinique", "MU": "Mauritius", "MW": "Malawi", "MY": "Malaysia", "YT": "Mayotte", "NA": "Namibia", "NC": "New Caledonia", "NE": "Niger", "NF": "Norfolk Island", "NG": "Nigeria", "NI": "Nicaragua", "NU": "Niue", "NL": "Netherlands", "NO": "Norway", "NP": "Nepal", "NR": "Nauru", "NZ": "New Zealand", "OM": "Oman", "PK": "Pakistan", "PA": "Panama", "PN": "Pitcairn", "PE": "Peru", "PH": "Philippines", "PW": "Palau", "PG": "Papua New Guinea", "PL": "Poland", "PR": "Puerto Rico", "KP": "North Korea", "PT": "Portugal", "PY": "Paraguay", "PS": "Palestine, State of", "PF": "French Polynesia", "QA": "Qatar", "RE": "Réunion", "RO": "Romania", "RU": "Russian Federation", "RW": "Rwanda", "SA": "Saudi Arabia", "SD": "Sudan", "SN": "Senegal", "SG": "Singapore", "GS": "South Georgia and the South Sandwich Islands", "SH": "Saint Helena, Ascension and Tristan da Cunha", "SJ": "Svalbard and Jan Mayen", "SB": "Solomon Islands", "SL": "Sierra Leone", "SV": "El Salvador", "SM": "San Marino", "SO": "Somalia", "PM": "Saint Pierre and Miquelon", "RS": "Serbia", "SS": "South Sudan", "ST": "Sao Tome and Principe", "SR": "Suriname", "SK": "Slovakia", "SI": "Slovenia", "SE": "Sweden", "SZ": "Eswatini", "SX": "Sint Maarten (Dutch part)", "SC": "Seychelles", "SY": "Syria", "TC": "Turks and Caicos Islands", "TD": "Chad", "TG": "Togo", "TH": "Thailand", "TJ": "Tajikistan", "TK": "Tokelau", "TM": "Turkmenistan", "TL": "Timor-Leste", "TO": "Tonga", "TT": "Trinidad and Tobago", "TN": "Tunisia", "TR": "Türkiye", "TV": "Tuvalu", "TW": "Taiwan", "TZ": "Tanzania", "UG": "Uganda", "UA": "Ukraine", "UM": "United States Minor Outlying Islands", "UY": "Uruguay", "US": "United States", "UZ": "Uzbekistan", "VA": "Holy See (Vatican City State)", "VC": "Saint Vincent and the Grenadines", "VE": "Venezuela", "VG": "Virgin Islands, British", "VI": "Virgin Islands, U.S.", "VN": "Vietnam", "VU": "Vanuatu", "WF": "Wallis and Futuna", "WS": "Samoa", "YE": "Yemen", "ZA": "South Africa", "ZM": "Zambia", "ZW": "Zimbabwe"}; A2NAME.XK = 'Kosovo';
+const MAP_I18N = {
+  tr: { _visitor:'ziyaretçi', _visitors:'ziyaretçi', _noData:'ziyaret yok', _loading:'yükleniyor…',
+        _countriesVisited:function(n){ return n+' ülke ziyaret etti'; } },
+  en: { _visitor:'visitor', _visitors:'visitors', _noData:'no visits', _loading:'loading…',
+        _countriesVisited:function(n){ return n+' countries visited'; } }
+};
+function curLang(){
+  var l=(document.documentElement.lang||'').toLowerCase();
+  if(l==='en'||l==='tr') return l;
+  try{ var s=localStorage.getItem('site_lang'); if(s) return s==='en'?'en':'tr'; }catch(e){}
+  return 'tr';
+}
+function md(){ return MAP_I18N[curLang()]||MAP_I18N.en; }
+function visitorWord(n){ var d=md(); return n===1?d._visitor:d._visitors; }
+
+var COUNTS={}, TOTAL=0, MAXCOUNT=0, selectedA2=null, zoom=null, mapDrawn=false;
+
+async function loadGeo(){
+  var total=document.getElementById('statTotal'), cc=document.getElementById('statCountries');
+  if(total) total.textContent=md()._loading; if(cc) cc.textContent=md()._loading;
+  try{ fetch(MAP_WORKER+'/geo/hit',{method:'POST',cache:'no-store',keepalive:true}); }catch(e){}
+  try{
+    var r=await fetch(MAP_WORKER+'/geo',{cache:'no-store'}); var d=await r.json();
+    var raw=d.countries||d.counts||{};
+    COUNTS={}; for(var k in raw){ var v=+raw[k]; if(v>0) COUNTS[String(k).toUpperCase()]=v; }
+    var sum=Object.values(COUNTS).reduce(function(a,b){return a+b;},0);
+    TOTAL=(d.total!=null)?+d.total:sum;
+    MAXCOUNT=Object.values(COUNTS).reduce(function(a,b){return Math.max(a,b);},0);
+  }catch(e){ COUNTS={}; TOTAL=0; MAXCOUNT=0; }
+  paintCounts(); updateStats();
+}
+function fillFor(count){
+  if(!count) return null;
+  var t=MAXCOUNT>1?Math.log(count+1)/Math.log(MAXCOUNT+1):1;
+  return 'rgba(74,163,232,'+(0.28+t*0.6).toFixed(3)+')';
+}
+var svg,g,projection,path,tip,stage;
+function a2ForFeature(f){
+  if(f.id==null||f.id===''){ return (f.properties&&f.properties.name==='Kosovo')?'XK':null; }
+  return NUM2A2[String(+f.id)]||null;
+}
+function paintCounts(){
+  if(!g) return;
+  g.selectAll('path.country').each(function(d){
+    var a2=a2ForFeature(d), c=a2?COUNTS[a2]:0;
+    d3.select(this).classed('visited', !!c);
+    this.style.fill = fillFor(c)||'';
+  });
+}
+function renderMap(topo){
+  var countries=topojson.feature(topo, topo.objects.countries).features;
+  projection.fitSize([960,500], {type:'FeatureCollection', features:countries});
+  g.selectAll('path.country').data(countries).enter().append('path')
+    .attr('class','country').attr('d',path)
+    .on('mousemove', function(ev,d){ showTip(ev,d); d3.select(this).classed('hover',true); })
+    .on('mouseleave', function(){ hideTip(); d3.select(this).classed('hover',false); })
+    .on('click', function(ev,d){ selectCountry(d); });
+  zoom=d3.zoom().scaleExtent([1,8]).on('zoom', function(ev){ g.attr('transform', ev.transform); });
+  svg.call(zoom);
+  mapDrawn=true; paintCounts(); updateStats();
+}
+function showTip(ev,d){
+  var a2=a2ForFeature(d);
+  var name=(a2&&A2NAME[a2])||(d.properties&&d.properties.name)||'—';
+  var count=a2?(COUNTS[a2]||0):0;
+  tip.innerHTML = count
+    ? '<div class="tt-name">'+name+'</div><div class="tt-count">'+count+' '+visitorWord(count)+'</div>'
+    : '<div class="tt-name">'+name+'</div><div class="tt-empty">'+md()._noData+'</div>';
+  var r=stage.getBoundingClientRect();
+  var x=ev.clientX-r.left+14, y=ev.clientY-r.top+14;
+  tip.classList.add('show');
+  var tw=tip.offsetWidth, th=tip.offsetHeight;
+  if(x+tw>r.width) x=ev.clientX-r.left-tw-14;
+  if(y+th>r.height) y=ev.clientY-r.top-th-14;
+  tip.style.left=x+'px'; tip.style.top=y+'px';
+}
+function hideTip(){ tip.classList.remove('show'); }
+function selectCountry(d){
+  selectedA2=a2ForFeature(d);
+  g.selectAll('path.country').classed('selected',false);
+  g.selectAll('path.country').filter(function(x){return x===d;}).classed('selected',true);
+  updateStats();
+}
+function updateStats(){
+  var total=document.getElementById('statTotal'), cc=document.getElementById('statCountries'),
+      ccSub=document.getElementById('statCountriesSub'), sel=document.getElementById('statSelected');
+  var n=Object.keys(COUNTS).length;
+  if(total) total.textContent=TOTAL?TOTAL.toLocaleString():'—';
+  if(cc) cc.textContent=n?n:'—';
+  if(ccSub) ccSub.textContent=n?md()._countriesVisited(n):'';
+  if(sel){
+    if(selectedA2){ var nm=A2NAME[selectedA2]||selectedA2, c=COUNTS[selectedA2]||0;
+      sel.textContent=c?(nm+' · '+c+' '+visitorWord(c)):(nm+' · —'); }
+    else sel.textContent='—';
+  }
+}
+window.initMap = async function(){
+  svg=d3.select('#map'); g=svg.append('g');
+  projection=d3.geoNaturalEarth1(); path=d3.geoPath(projection);
+  tip=document.getElementById('mapTip'); stage=document.querySelector('.map-stage');
+  var zi=document.getElementById('zoomIn'), zo=document.getElementById('zoomOut'), zr=document.getElementById('zoomReset');
+  if(zi) zi.onclick=function(){ if(zoom) svg.transition().duration(250).call(zoom.scaleBy,1.5); };
+  if(zo) zo.onclick=function(){ if(zoom) svg.transition().duration(250).call(zoom.scaleBy,1/1.5); };
+  if(zr) zr.onclick=function(){ if(zoom) svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity); };
+  new MutationObserver(function(){ if(mapDrawn) updateStats(); })
+    .observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+  try{
+    var topo=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(r){return r.json();});
+    renderMap(topo);
+  }catch(e){ console.warn('map load failed', e); }
+  loadGeo();
+};
+</script>
 
 <script>
 const CONFIG = {
@@ -1434,6 +1634,7 @@ function showPage(name){
   });
   window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
   if (name === 'music' && !musicLoaded) { musicLoaded = true; loadMusic('weeks'); }
+  if (name === 'map' && !window.__mapLoaded) { window.__mapLoaded = true; if (window.initMap) window.initMap(); }
   history.replaceState(null, '', '#' + name);
 }
 function goPage(e, name){ if (e) e.preventDefault(); showPage(name); }
@@ -1556,7 +1757,7 @@ function initPageNav(){
   if (cvBtn) cvBtn.addEventListener('click', unlockCv);
   if (cvPass) cvPass.addEventListener('keydown', e => { if (e.key === 'Enter') unlockCv(); });
   const h = (location.hash || '').replace('#','');
-  if (['home','activity','music','gear','cv'].includes(h)) showPage(h);
+  if (['home','activity','music','gear','cv','map'].includes(h)) showPage(h);
 }
 
 const SF_USER = (typeof CONFIG !== 'undefined' && CONFIG.statsfmUser) ? CONFIG.statsfmUser : 'pleow';
@@ -1882,6 +2083,7 @@ const I18N = {
     recentGames:'OYNAMA GEÇMİŞİ', playing:'OYNUYOR',
     topAlbums:'En Çok Dinlenen Albümler', topTrackLabel:'EN ÇOK DİNLENEN', listeningClock:'DİNLEME SAATİ', peak:'ZİRVE',
     navHome:'ana sayfa', navActivity:'aktivite', navMusic:'müzik', navGear:'diğer',
+    navMap:'harita', mapH1:'ziyaretçi haritası', mapSub:'anne bak, tüm dünyadayım.', mapWorld:'DÜNYA', mapReset:'Sıfırla', mapHint:'Yakınlaştırmak için kaydır, gezmek için sürükle, sayıyı görmek için bir ülkeye tıkla.', statTotal:'Toplam Ziyaret', statCountries:'Ülkeler', statSelected:'Seçili',
     phActivity:'aktivite', phMusic:'müzik',
     titleAbout:'HAKKIMDA<span class="grey">.</span>',
     titleStatus:'DURUM <span class="grey">MERKEZİ.</span>',
@@ -1907,6 +2109,7 @@ const I18N = {
     recentGames:'RECENT GAMES', playing:'PLAYING',
     topAlbums:'Most Played Albums', topTrackLabel:'TOP TRACK', listeningClock:'LISTENING CLOCK', peak:'PEAK',
     navHome:'home', navActivity:'activity', navMusic:'music', navGear:'more',
+    navMap:'map', mapH1:'visitor map', mapSub:"look mom, i'm around the world.", mapWorld:'WORLD', mapReset:'Reset', mapHint:'Scroll to zoom, drag to pan, click a country for visitor count.', statTotal:'Total Visits', statCountries:'Countries', statSelected:'Selected',
     phActivity:'activity', phMusic:'music',
     titleAbout:'ABOUT <span class="grey">ME.</span>',
     titleStatus:'STATUS <span class="grey">HUB.</span>',
