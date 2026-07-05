@@ -221,6 +221,7 @@ section { position: relative; z-index: 2; }
   background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;
 }
 .connect-item .ci-icon img { width: 20px; height: 20px; filter: brightness(0) invert(1); opacity: 0.85; }
+.connect-item .ci-icon img.ci-custom { filter: none; opacity: 1; border-radius: 4px; object-fit: contain; }
 .connect-item .ci-info { flex: 1; min-width: 0; }
 .connect-item .ci-name { font-size: 0.92rem; font-weight: 600; }
 .connect-item .ci-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1510,7 +1511,7 @@ const CONFIG = {
   quote: '',
   showMobile: true,
   showVc: true,
-  aboutMe: { tr: 'Real eyes\nRealize \nReal lies', en: 'Real eyes\nRealize \nReal lies' },
+  aboutMe: { tr: '', en: '' },
   aboutLinks: [
     { label: 'ple0w.github.io/pleow-site',    url: 'https://ple0w.github.io/pleow-site/' },
   ],
@@ -2148,7 +2149,7 @@ function renderConnect(){
   cg.innerHTML = CONFIG.links.map(l => {
     const sub = (CURRENT_LANG==='en' && l.subEn) ? l.subEn : (l.sub || '');
     return `<a class="connect-item" href="${l.url}" target="_blank" rel="noopener" data-cursor>
-        <div class="ci-icon"><img src="${/^https?:\/\//.test(l.slug) ? l.slug : 'https://cdn.simpleicons.org/' + l.slug}" onerror="this.style.opacity=0.3" alt=""></div>
+        <div class="ci-icon"><img class="${/^https?:\/\/|\.(png|jpe?g|svg|gif|webp)$|^\.?\//i.test(l.slug) ? 'ci-custom' : ''}" src="${/^https?:\/\/|\.(png|jpe?g|svg|gif|webp)$|^\.?\//i.test(l.slug) ? l.slug : 'https://cdn.simpleicons.org/' + l.slug}" onerror="this.style.opacity=0.3" alt=""></div>
         <div class="ci-info">
           <div class="ci-name">${l.label}</div>
           <div class="ci-sub">${sub}</div>
