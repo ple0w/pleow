@@ -1576,6 +1576,7 @@ const CONFIG = {
     { label: 'stats.fm',   url: 'https://stats.fm/pleow', slug: 'lastdotfm', sub: 'dinleme istatistikleri', subEn: 'listening stats' },
     { label: 'NameMC',     url: 'https://namemc.com/profile/pleow.1', slug: 'namemc', sub: 'pleow.1' },
     { label: 'Github',     url: 'https://github.com/ple0w', slug: 'github', sub: 'ple0w' },
+    { label: 'Animecix', url: 'https://animecix.tv/users/479599', slug: 'animecix.png', sub: 'Anime', subEn: 'Anime' },
   ],
   osu: {
     profileUrl: 'https://osu.ppy.sh/users/batuanfurkan5/mania',
@@ -2147,7 +2148,7 @@ function renderConnect(){
   cg.innerHTML = CONFIG.links.map(l => {
     const sub = (CURRENT_LANG==='en' && l.subEn) ? l.subEn : (l.sub || '');
     return `<a class="connect-item" href="${l.url}" target="_blank" rel="noopener" data-cursor>
-        <div class="ci-icon"><img src="https://cdn.simpleicons.org/${l.slug}" onerror="this.style.opacity=0.3" alt=""></div>
+        <div class="ci-icon"><img src="${/^https?:\/\//.test(l.slug) ? l.slug : 'https://cdn.simpleicons.org/' + l.slug}" onerror="this.style.opacity=0.3" alt=""></div>
         <div class="ci-info">
           <div class="ci-name">${l.label}</div>
           <div class="ci-sub">${sub}</div>
