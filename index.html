@@ -97,23 +97,26 @@ hr.d{border:none;border-top:1px dashed var(--line2);margin:11px 0}
 .pf .status{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);margin-top:5px}
 .corner{position:absolute;right:6px;bottom:6px;max-width:130px;max-height:120px;pointer-events:none;opacity:.92;z-index:1}
 @media(max-width:560px){.corner{max-width:88px;max-height:88px;opacity:.7}}
-
+/* custom emoji (guestbook) */
 .cem{width:18px;height:18px;vertical-align:-4px;margin:0 1px}
 .gb-emojiwrap{position:relative;display:inline-block;margin-top:9px}
 .gb-emoji-btn{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:4px 9px;cursor:pointer;color:var(--dim);font:inherit;font-size:11px}
 .gb-emoji-btn:hover{border-color:var(--accent);color:var(--text)}
 .gb-emoji-btn img{width:22px;height:22px}
-.gb-emoji-panel{position:absolute;left:0;bottom:40px;z-index:30;width:236px;border:2px solid var(--line2);background:var(--panel);border-radius:8px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.55);display:none;flex-wrap:wrap;gap:3px}
+.gb-emoji-panel{position:absolute;left:0;top:44px;z-index:30;width:252px;max-height:230px;overflow-y:auto;border:2px solid var(--line2);background:var(--panel);border-radius:8px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.55);display:none;flex-wrap:wrap;gap:3px;align-content:flex-start;scrollbar-width:thin;scrollbar-color:var(--accent) var(--panel2)}
 .gb-emoji-panel.open{display:flex}
+.gb-emoji-panel::-webkit-scrollbar{width:9px}
+.gb-emoji-panel::-webkit-scrollbar-track{background:var(--panel2);border-radius:6px}
+.gb-emoji-panel::-webkit-scrollbar-thumb{background:linear-gradient(160deg,var(--accent),var(--lilac));border-radius:6px;border:2px solid var(--panel2)}
 .gb-emoji-panel button{width:34px;height:34px;border:1px solid transparent;border-radius:5px;background:transparent;cursor:pointer;padding:3px}
 .gb-emoji-panel button:hover{border-color:var(--accent);background:var(--panel2)}
 .gb-emoji-panel button img{width:100%;height:100%}
-.gb-emoji-panel .cname{width:100%;font-size:9px;color:var(--dim2);text-align:center;padding-top:4px;border-top:1px solid var(--line);margin-top:4px}
+.gb-emoji-panel .cname{width:100%;position:sticky;bottom:-8px;background:var(--panel);font-size:9px;color:var(--dim2);text-align:center;padding:5px 0 1px;border-top:1px solid var(--line);margin-top:4px}
 .badges{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
 .badges img{width:18px;height:18px}
 .pf-blurb{color:var(--dim);font-size:12px;margin-top:10px}
 
-
+/* activity */
 .actgame{position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--line2);min-height:92px;display:flex;align-items:flex-end;padding:11px 12px}
 .actgame .bg{position:absolute;inset:0;background-size:cover;background-position:center}
 .actgame .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,13,20,.9),rgba(12,13,20,.4) 70%,rgba(12,13,20,.25))}
@@ -156,7 +159,7 @@ a.tt:hover .n{color:var(--accent)}
 .trk .a{color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
 .trk .ago{color:var(--dim2);font-size:10px;white-space:nowrap}
 
-
+/* stats.fm */
 .sfhead{display:flex;align-items:center;gap:12px}
 .sfhead img{width:52px;height:52px;border-radius:4px;object-fit:cover;border:1px solid var(--line2);background:#000}
 .sfhead .name{font-family:"VT323",monospace;font-size:26px;color:#fff;line-height:.9}
@@ -215,7 +218,7 @@ a.tt:hover .n{color:var(--accent)}
 .rng{background:#161923;border:1px solid var(--line2);color:var(--dim);font:inherit;font-size:10px;padding:3px 9px;border-radius:3px;cursor:pointer}
 .rng.on{color:#0c0d14;background:var(--accent);border-color:var(--accent)}
 
-
+/* radial clock */
 .clockwrap{display:flex;justify-content:center}
 .clockwrap svg{width:230px;height:230px;display:block}
 .clockwrap line.ray{cursor:pointer;transition:opacity .1s}
@@ -227,7 +230,7 @@ a.tt:hover .n{color:var(--accent)}
 .wb .bar i{display:block;height:100%;background:var(--accent)}
 .wb .v{color:var(--dim);width:52px;text-align:right;flex:0 0 52px}
 
-
+/* scroll rows/cols + purple scrollbars + arrow buttons */
 .scrollwrap{position:relative}
 .row-scroll{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 12px}
 .row-scroll .ar{flex:0 0 auto}
@@ -268,13 +271,13 @@ footer{text-align:center;color:var(--dim2);font-size:11px;margin-top:28px}
 .gochip{color:var(--dim);font-size:11px}.gochip b{color:var(--text)}
 
 @media(max-width:520px){.libgrid,.gamegrid{grid-template-columns:repeat(3,1fr)}.invgrid{grid-template-columns:repeat(5,1fr)}.tiles{grid-template-columns:repeat(2,1fr)}}
-
+/* background layers */
 #bg-layer{position:fixed;inset:0;z-index:-2;background-size:cover;background-position:center;background-repeat:no-repeat;display:none}
 #bg-dim{position:fixed;inset:0;z-index:-1;background:rgba(12,13,20,.8);display:none}
 body.hasbg{background-color:transparent}
 body.hasbg #bg-layer,body.hasbg #bg-dim{display:block}
 
-
+/* settings + fab */
 .fab{position:fixed;right:16px;bottom:16px;z-index:120;width:42px;height:42px;border-radius:50%;border:1px solid var(--accent);background:var(--panel);color:var(--accent);font-size:17px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.5)}
 .fab:hover{background:var(--accent);color:#0c0d14}
 .settings{position:fixed;right:16px;bottom:66px;z-index:120;width:252px;border:2px solid var(--line2);background:var(--panel);border-radius:9px;padding:14px;box-shadow:0 12px 34px rgba(0,0,0,.6);display:none}
@@ -290,14 +293,14 @@ body.hasbg #bg-layer,body.hasbg #bg-dim{display:block}
 .settings .tog button.on{background:var(--accent);color:#0c0d14;border-color:var(--accent)}
 .settings .mini{font-size:10px;color:var(--dim2);margin-left:8px}
 
-
+/* CRT mode */
 body.crt::before{opacity:1!important;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.035) 0 1px,transparent 1px 3px)}
 body.crt .wrap{animation:flicker 7s infinite}
 @keyframes flicker{0%,96%,100%{opacity:1}97%{opacity:.86}98%{opacity:1}99%{opacity:.92}}
 body.konami{animation:konamiFx 1s linear}
 @keyframes konamiFx{from{filter:hue-rotate(0)}to{filter:hue-rotate(360deg)}}
 
-
+/* command palette */
 .cmdk{position:fixed;inset:0;z-index:200;background:rgba(6,7,12,.72);display:none;align-items:flex-start;justify-content:center;padding-top:13vh;backdrop-filter:blur(3px)}
 .cmdk.open{display:flex}
 .cmdbox{width:min(520px,92vw);border:2px solid var(--line2);background:var(--panel);border-radius:10px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
@@ -309,12 +312,12 @@ body.konami{animation:konamiFx 1s linear}
 .cmdlist .ci.sel,.cmdlist .ci:hover{background:var(--panel2)}
 .cmdlist .ci.sel .n{color:var(--accent)}
 
-
+/* boot */
 #boot{position:fixed;inset:0;z-index:300;background:var(--bg);color:var(--accent);font-family:"JetBrains Mono",monospace;font-size:12px;padding:9vh 9vw;white-space:pre-wrap;line-height:1.8}
 #boot.done{animation:bootOut .5s ease forwards}
 @keyframes bootOut{to{opacity:0;visibility:hidden}}
 
-
+/* guestbook */
 .gb-form label{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;display:block;margin-top:8px}
 .gb-form input,.gb-form textarea{width:100%;background:var(--panel2);border:1px solid var(--line2);color:var(--text);font:inherit;font-size:12px;padding:8px 10px;border-radius:5px;margin-top:3px}
 .gb-form textarea{resize:vertical;min-height:66px}
@@ -333,14 +336,14 @@ body.konami{animation:konamiFx 1s linear}
 .gb-entry .msg{color:var(--text);font-size:12px;margin-top:3px;word-break:break-word}
 .gb-entry .em{font-size:15px}
 
-
+/* letterboxd */
 .lbx{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 10px}
 .lbx a{flex:0 0 84px;text-decoration:none}
 .lbx img{width:84px;height:126px;object-fit:cover;border-radius:4px;border:1px solid var(--line2);background:#000;display:block}
 .lbx .t{font-size:10px;color:var(--text);margin-top:4px;line-height:1.15}
 .lbx .st{font-size:11px;color:var(--amber)}
 
-
+/* osu plays */
 .oplay{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--line);font-size:11px}
 .oplay:first-child{border-top:none}
 .oplay img{width:46px;height:26px;object-fit:cover;border-radius:3px;flex:0 0 46px;background:#000}
@@ -384,7 +387,7 @@ body.konami{animation:konamiFx 1s linear}
     <a data-nav="guest">guest</a>
   </nav>
 
-  
+  <!-- HOME -->
   <div class="page" id="page-home">
     <section class="card">
       <span class="lbl">whoami</span>
@@ -421,7 +424,7 @@ body.konami{animation:konamiFx 1s linear}
     </section>
   </div>
 
-  
+  <!-- ABOUT -->
   <div class="page" id="page-about">
     <section class="card">
       <span class="lbl">readme.txt</span>
@@ -444,7 +447,7 @@ body.konami{animation:konamiFx 1s linear}
     </div>
   </div>
 
-  
+  <!-- MUSIC -->
   <div class="page" id="page-music">
     <section class="card">
       <span class="lbl">stats.fm</span>
@@ -477,7 +480,7 @@ body.konami{animation:konamiFx 1s linear}
     </section>
   </div>
 
-  
+  <!-- GAMES -->
   <div class="page" id="page-games">
     <section class="card">
       <span class="lbl">steam activity</span>
@@ -509,13 +512,13 @@ body.konami{animation:konamiFx 1s linear}
     </section>
   </div>
 
-  
+  <!-- LINKS -->
   <div class="page" id="page-links">
     <section class="card"><span class="lbl">find me</span><div class="links" id="lk-grid"></div></section>
     <section class="card"><span class="lbl am">friends &amp; sites</span><div class="btns" id="fr-btns"></div></section>
   </div>
 
-  
+  <!-- GUEST -->
   <div class="page" id="page-guest">
     <section class="card">
       <span class="lbl am">sign the guestbook</span>
@@ -610,11 +613,13 @@ function timeAgo(ts){ if(!ts) return ''; const d=(Date.now()-new Date(ts).getTim
 function fmtDur(ms){ if(!ms||ms<0)ms=0; const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;
   return (h?String(h).padStart(2,'0')+':':'')+String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0'); }
 const sig={}; function changed(k,d){const s=JSON.stringify(d); if(sig[k]===s)return false; sig[k]=s; return true;}
-async function getJSON(p){ const r=await fetch(base+p,{cache:'no-store'}); return r.json(); }
+async function getJSON(p){ const c=new AbortController(); const t=setTimeout(()=>c.abort(),8000);
+  try{ const r=await fetch(base+p,{cache:'no-store',signal:c.signal}); return await r.json(); }
+  finally{ clearTimeout(t); } }
 async function sfGet(path){ const r=await fetch(`${SF}/users/${SFU}${path}`,{headers:{'Accept':'application/json'}}); if(!r.ok) throw new Error('sf'); return r.json(); }
 function flag(cc){ return cc.replace(/./g,c=>String.fromCodePoint(127397+c.charCodeAt(0))); }
 
-
+/* router with page transitions */
 const PAGES=['home','about','music','games','links','guest'];
 const EXIT_MS=300;
 let curPage=null, switching=false;
@@ -640,7 +645,7 @@ $$('[data-nav]').forEach(el=>el.addEventListener('click',()=>showPage(el.dataset
 window.addEventListener('hashchange',()=>showPage(location.hash.slice(1)));
 showPage(location.hash.slice(1)||'home');
 
-
+/* static config */
 $('#pf-av').src=CONFIG.avatar; $('#sf-av').src=CONFIG.avatar;
 $('#pf-name').textContent=CONFIG.name; $('#pf-handle').textContent=CONFIG.handle;
 $('#pf-joined').textContent=CONFIG.joined;
@@ -659,7 +664,7 @@ $('#gear-list').innerHTML=CONFIG.gear.map(g=>{const ic=/^https?:/.test(g.icon)?`
 $('#stack-list').innerHTML=CONFIG.stack.map(s=>`<span><img src="${icon(s.slug)}" alt="" onerror="this.style.display='none'">${esc(s.name)}</span>`).join('');
 $('#fr-btns').innerHTML=CONFIG.friends.map(f=>`<a href="${f.url}" target="_blank" rel="noopener"><b>${esc(f.name)}</b><span>${esc(f.desc)}</span></a>`).join('');
 
-
+/* visitor sprites — cute chibi characters holding number placards (moe-counter vibe, original art) */
 const SPRITE_STYLES=[
   { body:'#a9c0ff', hair:'#f0c07a', acc:'bow',  accc:'#ec9393' },
   { body:'#d6b3ff', hair:'#8fdcae', acc:'ears', accc:'#d6b3ff' },
@@ -692,7 +697,7 @@ function spriteDigit(d,i){
   </svg>`;
 }
 function renderSprites(total){ $('#vm-sprites').innerHTML=String(Math.max(0,total|0)).split('').map((d,i)=>spriteDigit(d,i)).join(''); }
-
+/* moebooru anime counter — digit images embedded (SFW default theme), driven by WORKER number */
 const MOE_IMGS=[
     "data:image/gif;base64,R0lGODlhLQBkALMAACocJKGkunN8ntXa6BE1dwxKpTdvw0mq6v7j0vDWzOGFgLZtauGjov7+/gAAAP///yH5BAEAAA8ALAAAAAAtAGQAAAT/8MlJq7046827p04ohl8pjU2qCoJoco7aFEZtF2zrvmCcFgWZDJgTBBy8RygVmAmfs+IRWfI1mtAsC8BKUWFWrEwsXm27DZLGen2W340iV6D6Wthx4RseP6PTF3h5KgFvCzKHfX50V3ZKAUU5hUyJlIQLTXIAm5wAjiKRk1cKY5UBC6SanZ4ZIYVGTacMY6SUqTmramsOsKOztpcKkLibuh0OkwIKv1eowcNbrCa8mUDWBagB1wWbZ44eDgCZDOTl5udzXN/H4nGrCfDwq+ktL7xcDQAD1gPx8PtABtBbt+HelgYEEjZAwJAhQoUD7QkQN7HWwoYNVSiIOG1iLAYK/0JibBhyGccqHpvFG8kw3oKT4EIYaTSiZk1cxo6lmFkmi5mJgKrsjOXziRGgBDE4MLCsTc+iR0MmvdNwFtGiMugIYKhgKggE5EhdxcrkijmvShhUdSqjphuzDBmgdaCWK9s6KPTARdAVBjm7V/OmYfOx5dxyiQKLwDvGF4IEaJUYYHSliWAvi5k0QdX3WBjLmfEu0ZxiQeQJgi4PHi3kNOonqlVjFto6NGbWbQu4Tm17taA0uj/wxu0bioPg4LKwll0HuU7jVpjPFl7UbfXdv0UTh336eHay3I8J0A0efLjIvL6XryOtYIv1WB0cQP8evk8A88HNt8m//4j84FxTSP8AAwyQEBAHJEhDggoSYE13IRhQCA02SEhggQUuyKABDgKBXoEVDjggggweUMCFBWqTYHutDMCCNpPtQ+ArIhqhoYICFFhPTiAME8BkLGAzwIxDYlgkhoUQYMN8BSblQJNAjrdAgQtgYiAQUw5QZZET0uCiEU4iEaGUVZZ5YAEElLklDuNp8+UR4pGp5plpqrkAmwYcV8CQ9C3CwgJ0RnInC2LuAEOQcxQRaCRs1jONNYnmsKgcbLp2wjVcDEhohwTAMgwADz4KKYp8doiMkQGA6qE9Iuhj5AAOmPqqQNdYWoGrRsbq4ayqrprEk6/GWgOwuY6QxAmzxprgqUja2iLWqsrOR6qjx6L26hTL5oghtdUq8eqO82mro7NKfStmuMF2a22uJyyb7gnVEtskaia+Kx+5Sog7L73mygegPdd+QqqK/wLM7h2vFlCwwRiuI69A+K7bcCDvHstLxT0ayS3DE1N88K/JlvsxDw/DKnLHIGMMgrm/6rsvwioLR+rLFZSMb8kmezxyFbPmDPPOwvVMUMkbgyP0yUAfc7TOScOw9M9NF2TAq3kqNbWRC+tX4rJWb531MV5/LZnX5CJDditnkxzA1k6uzSCcKdPMdMQnGLoLjxVEAAA7",
     "data:image/gif;base64,R0lGODlhLQBkALMAAKGkunN8ntXa6BE1dwxKpTdvw0mq6vHm3+GBdvajm7QYF////wAAAP///wAAAAAAACH5BAEAAA0ALAAAAAAtAGQAAAT/sMlJq704622Z/2DYhWQZEoWhrqzKVAzRzvRaFIRcu1es70Bc7td6dYbApGGIag2Mx5wSmBvkUobCM+MjTllC63XLZXq/2WqVjGEIkSrsNLyGtt9SedwGjq/ZGm5meoR9aQQDiXZceAQCCwsCWY+QBQp8h4iAgW8GlAKWlAsGCo+gkm+bG4JelmCXe1liqpw4La42sFmysxxHKT8KCK98ColWi74xQisKCc8JWbAICQgIxwTJHG43wcaJztDH38i+MDe20gMKCgsJB/AH7O7HtIEoQt3G8/Hw/MfaVnWTomIfggX95B08oClgLThZrC3sZ20BAk322qBgYuMApITw/xAmUNDQnARWV2xAAwmvGklFJht0SbnC2juWz15m7PGBpoqbLZ+1vGZl5yo3LNYBbanAQ6JsMdt4UJEoQAB2CgKQ+RB1VVUAAK6GDcC1q0AmAcCGPUbWLJdHJuKKiBoCkt27ePNadNjjmd6/f6kh4EuBAYKWgBPbtUn4ZL8EiiOza8zgpl/AHxS75MtAwGF4BzF70DySs8V4ofPWTUytaaAFCob+XQ0YweTX4VLPHp2YAQDCDCBNVpy59+9tkX4T54257SoAApT3Zr7bnG/pooP3jlk8O/Gu2r1vp7s8/Gzw5b+TVy1Xb+MO7turRh+5/vvC9e2vzz/epHn+7u0HYP+A3A2ImYDZyQWeXB/U46BRZaAjIQ4PPnjfEQNM2M0sFcIE3hBWaKhFh09cWNgQDAxwjRkYWehWFy9U9oxEJEhkjYkTwHgSNNDYYZiNOMqEYo6PJeCjjYNxpyOR8RgJA5L3ecDEIgw8RiWUypiRTJVNbglkljl40MFS2vxIozJi9pBQmVi6xWQ8bH7ppkxLOdlBm25yCWcbeL64Jp9y5mkloNZAeM+gPTgY5IkYOdTZMQIIsOhJCzT6VqSYTtrZXZJeiqkAziG4gKOfZmrWf6N6+mmQm+JFaqmg4ohqqm3AGqmJrbqq6qoFEtiDrZ36d16ttuI67K/FCntsB8BeOCtHJK/C6uyBbQQAa6jILQuDtaViuwq1xH7qbSCi2BUsF9xGqhWuA5RKWYXsaqkMNojIOuF7KXIoKyjoRMkreJ84W9apA89JQQQAOw==",
@@ -711,7 +716,7 @@ function renderMoe(total){ const el=$('#vm-sprites'); const n=Math.max(0,total|0
   if(Array.isArray(MOE_IMGS)&&MOE_IMGS.length===10){ el.classList.add('moe'); el.innerHTML=moeSVG(n); }
   else { el.classList.remove('moe'); renderSprites(n); } }
 
-
+/* views + ping */
 (async()=>{
   try{ const t=performance.now();
     const d=await (await fetch(base+'/views',{method:'POST',cache:'no-store'})).json();
@@ -720,14 +725,14 @@ function renderMoe(total){ const el=$('#vm-sprites'); const n=Math.max(0,total|0
   }catch(e){ const vE=$('#views'); if(vE) vE.textContent='—'; $('#ping').textContent='offline'; }
 })();
 
-
+/* weather */
 (async()=>{ try{
   const u=`https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.weatherLat}&longitude=${CONFIG.weatherLon}&current=temperature_2m,relative_humidity_2m`;
   const c=(await (await fetch(u)).json()).current;
   if(c) $('#pf-weather').textContent=`${Math.round(c.temperature_2m)}\u00b0C \u00b7 ${c.relative_humidity_2m}%`;
 }catch(e){} })();
 
-
+/* ---------- live activity (game + spotify) ---------- */
 let ACT={game:null,spotify:null};
 function gameImg(a){
   if(!a) return '';
@@ -776,7 +781,7 @@ function actTick(){
 }
 setInterval(actTick,1000);
 
-
+/* presence */
 const DBADGES=[
   [1<<0,'Discord Staff','5e74e9b61934fc1f67c65515d1f7e60d'],
   [1<<1,'Partner','3f9748e53446a137a052f3454e2de41e'],
@@ -831,7 +836,7 @@ async function loadPresence(){ try{
 }catch(e){} }
 loadPresence(); setInterval(loadPresence,20000);
 
-
+/* recent scrobbles (home) */
 async function loadMusic(){ try{
   const d=await getJSON('/music/recent');
   const el=$('#mu-list-home');
@@ -844,7 +849,7 @@ async function loadMusic(){ try{
 }catch(e){ $('#mu-list-home').innerHTML='<div class="load">unavailable.</div>'; } }
 loadMusic(); setInterval(loadMusic,60000);
 
-
+/* ---------- stats.fm detailed music ---------- */
 const RLABEL={weeks:'last 4 weeks',months:'last 6 months',lifetime:'all time'};
 function trackImg(t){ return (t.albums&&t.albums[0]&&t.albums[0].image)||t.image||(t.album&&t.album.image)||''; }
 function artistsOf(t){ const a=t.artists||(t.artist?[t.artist]:[]); return a.map(x=>x&&x.name||x).filter(Boolean).join(', '); }
@@ -923,7 +928,7 @@ async function loadTopAlbums(range){
   }catch(e){ box.innerHTML='<div class="load">unavailable.</div>'; }
 }
 
-
+/* radial listening clock (worker /music/clock) */
 const WD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 function renderClock(d){
   const wrap=$('#clockwrap'), center=$('#clock-center'), wb=$('#weekbars');
@@ -973,7 +978,7 @@ $$('.sarrow').forEach(b=>b.addEventListener('click',()=>{
 }));
 loadMusicRange('weeks');
 
-
+/* steam */
 async function loadSteamRecent(){ try{
   const d=await getJSON('/steam/recent'); const box=$('#st-recent');
   if(!d.ok||!d.games||!d.games.length){ box.innerHTML='<div class="load">no recent activity.</div>'; return; }
@@ -996,7 +1001,7 @@ async function loadInventory(){ try{
     <img src="${it.icon}" onerror="this.onerror=null;this.style.display='none'" alt=""></div>`).join('');
 }catch(e){ $('#inv-empty').style.display='block'; $('#inv-empty').textContent='unavailable.'; } }
 
-
+/* valorant */
 async function loadValorant(){ try{
   const [m,s]=await Promise.all([getJSON('/valorant').catch(()=>({})),getJSON('/valorant/stats').catch(()=>({}))]);
   if(m&&m.ok&&m.val){ const v=m.val;
@@ -1014,7 +1019,7 @@ async function loadValorant(){ try{
   } else { $('#val-rank').textContent='—'; $('#val-body').innerHTML='<div class="load tiny">unavailable.</div>'; }
 }catch(e){ $('#val-body').innerHTML='<div class="load tiny">unavailable.</div>'; } }
 
-
+/* osu */
 async function loadOsu(){
   const box=$('#osu-body'); const pb=$('#osu-plays'); if(pb) pb.innerHTML='';
   try{
@@ -1057,7 +1062,7 @@ setTimeout(loadSteamRecent,150); setTimeout(loadSteamLib,400); setTimeout(loadIn
 setTimeout(loadValorant,950); setTimeout(loadOsu,1200);
 
 const ISO2NAME={"AF":"Afghanistan","AX":"Åland Islands","AL":"Albania","DZ":"Algeria","AS":"American Samoa","AD":"Andorra","AO":"Angola","AI":"Anguilla","AQ":"Antarctica","AG":"Antigua and Barbuda","AR":"Argentina","AM":"Armenia","AW":"Aruba","AU":"Australia","AT":"Austria","AZ":"Azerbaijan","BS":"Bahamas","BH":"Bahrain","BD":"Bangladesh","BB":"Barbados","BY":"Belarus","BE":"Belgium","BZ":"Belize","BJ":"Benin","BM":"Bermuda","BT":"Bhutan","BO":"Bolivia, Plurinational State of","BQ":"Bonaire, Sint Eustatius and Saba","BA":"Bosnia and Herzegovina","BW":"Botswana","BV":"Bouvet Island","BR":"Brazil","IO":"British Indian Ocean Territory","BN":"Brunei Darussalam","BG":"Bulgaria","BF":"Burkina Faso","BI":"Burundi","KH":"Cambodia","CM":"Cameroon","CA":"Canada","CV":"Cabo Verde","KY":"Cayman Islands","CF":"Central African Republic","TD":"Chad","CL":"Chile","CN":"China","CX":"Christmas Island","CC":"Cocos (Keeling) Islands","CO":"Colombia","KM":"Comoros","CG":"Congo","CD":"Congo, Democratic Republic of the","CK":"Cook Islands","CR":"Costa Rica","CI":"Côte d'Ivoire","HR":"Croatia","CU":"Cuba","CW":"Curaçao","CY":"Cyprus","CZ":"Czechia","DK":"Denmark","DJ":"Djibouti","DM":"Dominica","DO":"Dominican Republic","EC":"Ecuador","EG":"Egypt","SV":"El Salvador","GQ":"Equatorial Guinea","ER":"Eritrea","EE":"Estonia","ET":"Ethiopia","FK":"Falkland Islands (Malvinas)","FO":"Faroe Islands","FJ":"Fiji","FI":"Finland","FR":"France","GF":"French Guiana","PF":"French Polynesia","TF":"French Southern Territories","GA":"Gabon","GM":"Gambia","GE":"Georgia","DE":"Germany","GH":"Ghana","GI":"Gibraltar","GR":"Greece","GL":"Greenland","GD":"Grenada","GP":"Guadeloupe","GU":"Guam","GT":"Guatemala","GG":"Guernsey","GN":"Guinea","GW":"Guinea-Bissau","GY":"Guyana","HT":"Haiti","HM":"Heard Island and McDonald Islands","VA":"Holy See","HN":"Honduras","HK":"Hong Kong","HU":"Hungary","IS":"Iceland","IN":"India","ID":"Indonesia","IR":"Iran, Islamic Republic of","IQ":"Iraq","IE":"Ireland","IM":"Isle of Man","IL":"Israel","IT":"Italy","JM":"Jamaica","JP":"Japan","JE":"Jersey","JO":"Jordan","KZ":"Kazakhstan","KE":"Kenya","KI":"Kiribati","KP":"Korea, Democratic People's Republic of","KR":"Korea, Republic of","XK":"Kosovo","KW":"Kuwait","KG":"Kyrgyzstan","LA":"Lao People's Democratic Republic","LV":"Latvia","LB":"Lebanon","LS":"Lesotho","LR":"Liberia","LY":"Libya","LI":"Liechtenstein","LT":"Lithuania","LU":"Luxembourg","MO":"Macao","MK":"North Macedonia","MG":"Madagascar","MW":"Malawi","MY":"Malaysia","MV":"Maldives","ML":"Mali","MT":"Malta","MH":"Marshall Islands","MQ":"Martinique","MR":"Mauritania","MU":"Mauritius","YT":"Mayotte","MX":"Mexico","FM":"Micronesia, Federated States of","MD":"Moldova, Republic of","MC":"Monaco","MN":"Mongolia","ME":"Montenegro","MS":"Montserrat","MA":"Morocco","MZ":"Mozambique","MM":"Myanmar","NA":"Namibia","NR":"Nauru","NP":"Nepal","NL":"Netherlands","NC":"New Caledonia","NZ":"New Zealand","NI":"Nicaragua","NE":"Niger","NG":"Nigeria","NU":"Niue","NF":"Norfolk Island","MP":"Northern Mariana Islands","NO":"Norway","OM":"Oman","PK":"Pakistan","PW":"Palau","PS":"Palestine, State of","PA":"Panama","PG":"Papua New Guinea","PY":"Paraguay","PE":"Peru","PH":"Philippines","PN":"Pitcairn","PL":"Poland","PT":"Portugal","PR":"Puerto Rico","QA":"Qatar","RE":"Réunion","RO":"Romania","RU":"Russian Federation","RW":"Rwanda","BL":"Saint Barthélemy","SH":"Saint Helena, Ascension and Tristan da Cunha","KN":"Saint Kitts and Nevis","LC":"Saint Lucia","MF":"Saint Martin (French part)","PM":"Saint Pierre and Miquelon","VC":"Saint Vincent and the Grenadines","WS":"Samoa","SM":"San Marino","ST":"Sao Tome and Principe","SA":"Saudi Arabia","SN":"Senegal","RS":"Serbia","SC":"Seychelles","SL":"Sierra Leone","SG":"Singapore","SX":"Sint Maarten (Dutch part)","SK":"Slovakia","SI":"Slovenia","SB":"Solomon Islands","SO":"Somalia","ZA":"South Africa","GS":"South Georgia and the South Sandwich Islands","SS":"South Sudan","ES":"Spain","LK":"Sri Lanka","SD":"Sudan","SR":"Suriname","SJ":"Svalbard and Jan Mayen","SZ":"Eswatini","SE":"Sweden","CH":"Switzerland","SY":"Syrian Arab Republic","TW":"Taiwan, Province of China","TJ":"Tajikistan","TZ":"Tanzania, United Republic of","TH":"Thailand","TL":"Timor-Leste","TG":"Togo","TK":"Tokelau","TO":"Tonga","TT":"Trinidad and Tobago","TN":"Tunisia","TR":"Türkiye","TM":"Turkmenistan","TC":"Turks and Caicos Islands","TV":"Tuvalu","UG":"Uganda","UA":"Ukraine","AE":"United Arab Emirates","GB":"United Kingdom of Great Britain and Northern Ireland","US":"United States of America","UM":"United States Minor Outlying Islands","UY":"Uruguay","UZ":"Uzbekistan","VU":"Vanuatu","VE":"Venezuela, Bolivarian Republic of","VN":"Viet Nam","VG":"Virgin Islands, British","VI":"Virgin Islands, U.S.","WF":"Wallis and Futuna","EH":"Western Sahara","YE":"Yemen","ZM":"Zambia","ZW":"Zimbabwe"};
-
+/* ================= THEME / SETTINGS / PALETTE / RETRO / GUESTBOOK / LETTERBOXD ================= */
 const ACCENTS={
   periwinkle:['#a9c0ff','#5568a8'], amber:['#f0c07a','#8a6a34'], mint:['#8fdcae','#3f7a58'],
   lilac:['#d6b3ff','#7a5aa8'], rose:['#f2a7c3','#a05f79'], green:['#7bd88f','#3f7a4f'], cyan:['#8fd4e0','#3f7580']
@@ -1083,13 +1088,13 @@ $('#fab').addEventListener('click',()=>$('#settings').classList.toggle('open'));
 $$('.sw').forEach(s=>s.addEventListener('click',()=>applyAccent(s.dataset.acc)));
 $('#crt-btn').addEventListener('click',()=>applyCrt(!document.body.classList.contains('crt')));
 
-
+/* favicon + dynamic title */
 (function(){ const l=document.createElement('link'); l.rel='icon'; l.type='image/svg+xml';
   l.href="data:image/svg+xml,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='#14151e'/><text x='16' y='24' font-family='monospace' font-weight='bold' font-size='22' fill='#a9c0ff' text-anchor='middle'>p</text></svg>");
   document.head.appendChild(l); })();
 function setTitle(t){ document.title = t ? (t+' — pleow') : 'pleow'; }
 
-
+/* command palette + keyboard nav */
 const CMDS=[
   {n:'Home',ico:'▸',hint:'1',act:()=>showPage('home')},
   {n:'About',ico:'▸',hint:'2',act:()=>showPage('about')},
@@ -1128,7 +1133,7 @@ document.addEventListener('keydown',e=>{
   else if(e.key>='1'&&e.key<='6'){ const p=PAGES[+e.key-1]; if(p) showPage(p); }
 });
 
-
+/* boot sequence (once per session) */
 (function(){ const el=$('#boot'); if(!el) return;
   let booted=false; try{ booted=sessionStorage.getItem('pleow_booted'); }catch(e){}
   if(booted){ el.remove(); return; }
@@ -1139,13 +1144,13 @@ document.addEventListener('keydown',e=>{
     if(i>=lines.length){ clearInterval(iv); setTimeout(()=>{ el.classList.add('done'); setTimeout(()=>el.remove(),520); },420); } },150);
 })();
 
-
+/* konami easter egg */
 (function(){ const seq=[38,38,40,40,37,39,37,39,66,65]; let p=0;
   document.addEventListener('keydown',e=>{ if(e.keyCode===seq[p]){ p++; if(p===seq.length){ p=0;
     document.body.classList.add('konami'); setTimeout(()=>document.body.classList.remove('konami'),1000); } }
     else p=(e.keyCode===seq[0]?1:0); }); })();
 
-
+/* custom anime-face emojis (original SVG data-URIs, SFW). Replace img with your own Discord emoji URLs if you want. */
 function faceURI(hair,exp){
   const dot=x=>`<circle cx="${x}" cy="19" r="2.2" fill="#2a2333"/><circle cx="${x+0.6}" cy="18.3" r=".6" fill="#fff"/>`;
   let eyes='',mouth='',extra='';
@@ -1163,27 +1168,51 @@ function faceURI(hair,exp){
   const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><circle cx="18" cy="20" r="13" fill="#ffe7d2"/><path d="M5 20 a13 13 0 0 1 26 0 q0 -10 -13 -10 q-13 0 -13 10Z" fill="'+hair+'"/><path d="M6 19 q-1.5 7 1.5 12 q-4 -6 -1.5 -12Z" fill="'+hair+'"/><path d="M30 19 q1.5 7 -1.5 12 q4 -6 1.5 -12Z" fill="'+hair+'"/><circle cx="12" cy="23" r="2" fill="#ec9393" opacity=".5"/><circle cx="24" cy="23" r="2" fill="#ec9393" opacity=".5"/>'+eyes+mouth+extra+'</svg>';
   return 'data:image/svg+xml,'+encodeURIComponent(svg);
 }
-
-fetch('https://api.github.com/repos/ple0w/pleow-site/contents/emoji')
-  .then(r=>r.json())
-  .then(files => EMOJI = files
-     .filter(f=>/\.(png|gif|webp)$/i.test(f.name))
-     .map(f=>({ name:f.name.replace(/\.\w+$/,''), img:f.download_url })));
-const EMOJI_MAP=Object.fromEntries(EMOJI.map(e=>[e.name,e.img]));
+/* ============================================================
+   EMOJILER — repodaki "emoji" klasöründen OTOMATİK yüklenir.
+   Yeni emoji eklemek: repodaki  emoji/  klasörüne png/gif at →  :dosyaadı:  olarak kullanılır.
+   (Elle liste tutmana gerek yok.) Aşağıdaki liste sadece GitHub'a ulaşılamazsa devreye giren yedek.
+   Klasör adın farklıysa EMOJI_FOLDER'ı değiştir. ============================================================ */
+const EMOJI_REPO='ple0w/pleow-site', EMOJI_FOLDER='emoji';
+let EMOJI=[
+  { name:'smile', img:faceURI('#f0c07a','happy') },
+  { name:'wink',  img:faceURI('#d6b3ff','wink')  },
+  { name:'love',  img:faceURI('#f2a7c3','love')  },
+  { name:'cry',   img:faceURI('#a9c0ff','cry')   },
+  { name:'cool',  img:faceURI('#8fdcae','cool')  },
+  { name:'sleep', img:faceURI('#bcd0ff','sleep') },
+  { name:'nya',   img:faceURI('#ffc7dd','cat')   },
+  { name:'star',  img:faceURI('#f0c07a','star')  },
+];
+let EMOJI_MAP=Object.fromEntries(EMOJI.map(e=>[e.name,e.img]));
+async function loadEmojisFromGitHub(){
+  try{
+    const r=await fetch(`https://api.github.com/repos/${EMOJI_REPO}/contents/${EMOJI_FOLDER}`,{headers:{'Accept':'application/vnd.github+json'}});
+    if(!r.ok) return;
+    const files=await r.json();
+    if(!Array.isArray(files)) return;
+    const list=files.filter(f=>f.type==='file'&&/\.(png|gif|webp|jpe?g|apng)$/i.test(f.name))
+      .map(f=>({ name:f.name.replace(/\.[^.]+$/,'').toLowerCase(), img:f.download_url }));
+    if(list.length){ EMOJI=list; EMOJI_MAP=Object.fromEntries(EMOJI.map(e=>[e.name,e.img])); renderEmojiPanel(); loadGuestbook(); }
+  }catch(e){}
+}
+function renderEmojiPanel(){
+  const panel=$('#gb-emoji-panel'), btnImg=$('#gb-emoji-btn-img');
+  if(btnImg&&EMOJI[0]) btnImg.src=EMOJI[0].img;
+  if(panel) panel.innerHTML=EMOJI.map(e=>`<button type="button" data-n="${esc(e.name)}" title=":${esc(e.name)}:"><img src="${e.img}" onerror="this.style.opacity=.3" alt=":${esc(e.name)}:"></button>`).join('')+`<div class="cname">tap → adds :name: to your message</div>`;
+}
 function renderGBText(t){ return esc(t).replace(/:([a-z0-9_]+):/gi,(m,n)=>{ const k=n.toLowerCase(); return EMOJI_MAP[k]?`<img class="cem" src="${EMOJI_MAP[k]}" alt=":${esc(k)}:" title=":${esc(k)}:">`:m; }); }
 function insertAtCaret(ta,text){ const s=ta.selectionStart!=null?ta.selectionStart:ta.value.length, e=ta.selectionEnd!=null?ta.selectionEnd:ta.value.length; ta.value=ta.value.slice(0,s)+text+ta.value.slice(e); const p=s+text.length; try{ta.selectionStart=ta.selectionEnd=p;}catch(_){}; ta.focus(); }
 
 function initGuestbook(){
-  const btn=$('#gb-emoji-btn'), panel=$('#gb-emoji-panel'), btnImg=$('#gb-emoji-btn-img');
-  if(btnImg) btnImg.src=EMOJI[0].img;
-  if(panel){
-    panel.innerHTML=EMOJI.map(e=>`<button type="button" data-n="${e.name}" title=":${e.name}:"><img src="${e.img}" alt=":${e.name}:"></button>`).join('')+`<div class="cname">tap → adds :name: to your message</div>`;
-    panel.addEventListener('click',ev=>{ const b=ev.target.closest('button'); if(!b) return; insertAtCaret($('#gb-msg'),':'+b.dataset.n+': '); });
-  }
+  const btn=$('#gb-emoji-btn'), panel=$('#gb-emoji-panel');
+  renderEmojiPanel();
+  if(panel) panel.addEventListener('click',ev=>{ const b=ev.target.closest('button'); if(!b) return; insertAtCaret($('#gb-msg'),':'+b.dataset.n+': '); });
   if(btn) btn.addEventListener('click',e=>{ e.stopPropagation(); panel.classList.toggle('open'); });
   document.addEventListener('click',ev=>{ if(panel&&panel.classList.contains('open')&&!panel.contains(ev.target)&&!(btn&&btn.contains(ev.target))) panel.classList.remove('open'); });
   const send=$('#gb-send'); if(send) send.addEventListener('click',submitGuestbook);
   loadGuestbook();
+  loadEmojisFromGitHub();
 }
 async function loadGuestbook(){ const box=$('#gb-list'); if(!box) return;
   try{ const d=await getJSON('/guestbook');
@@ -1205,7 +1234,7 @@ async function submitGuestbook(){
   send.disabled=false; send.textContent='sign \u25B8';
 }
 
-
+/* osu recent/best plays (rendered only if the osu payload includes them) */
 function renderOsuPlays(d){ const box=$('#osu-plays'); if(!box) return;
   const best=d.best||d.best_scores||d.top_scores||[], recent=d.recent||d.recent_scores||d.recentPlays||[];
   const useBest=best.length>0, arr=(useBest?best:recent).slice(0,5);
@@ -1224,7 +1253,7 @@ function renderOsuPlays(d){ const box=$('#osu-plays'); if(!box) return;
 
 setTimeout(initGuestbook,300);
 
-
+/* visitor geo → sprites + mini flags */
 (async()=>{
   let geo={total:0,countries:{}};
   try{
