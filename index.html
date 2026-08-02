@@ -1164,16 +1164,11 @@ function faceURI(hair,exp){
   return 'data:image/svg+xml,'+encodeURIComponent(svg);
 }
 
-const EMOJI=[
-  { name:'smile', img:'emoji/120458-pepecross.png' },   
-  { name:'wink',  img:faceURI('#d6b3ff','wink')  },
-  { name:'love',  img:faceURI('#f2a7c3','love')  },
-  { name:'cry',   img:faceURI('#a9c0ff','cry')   },
-  { name:'cool',  img:faceURI('#8fdcae','cool')  },
-  { name:'sleep', img:faceURI('#bcd0ff','sleep') },
-  { name:'nya',   img:faceURI('#ffc7dd','cat')   },
-  { name:'star',  img:faceURI('#f0c07a','star')  },
-];
+fetch('https://api.github.com/repos/ple0w/pleow-site/contents/emoji')
+  .then(r=>r.json())
+  .then(files => EMOJI = files
+     .filter(f=>/\.(png|gif|webp)$/i.test(f.name))
+     .map(f=>({ name:f.name.replace(/\.\w+$/,''), img:f.download_url })));
 const EMOJI_MAP=Object.fromEntries(EMOJI.map(e=>[e.name,e.img]));
 function renderGBText(t){ return esc(t).replace(/:([a-z0-9_]+):/gi,(m,n)=>{ const k=n.toLowerCase(); return EMOJI_MAP[k]?`<img class="cem" src="${EMOJI_MAP[k]}" alt=":${esc(k)}:" title=":${esc(k)}:">`:m; }); }
 function insertAtCaret(ta,text){ const s=ta.selectionStart!=null?ta.selectionStart:ta.value.length, e=ta.selectionEnd!=null?ta.selectionEnd:ta.value.length; ta.value=ta.value.slice(0,s)+text+ta.value.slice(e); const p=s+text.length; try{ta.selectionStart=ta.selectionEnd=p;}catch(_){}; ta.focus(); }
