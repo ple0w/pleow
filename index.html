@@ -205,9 +205,10 @@ a.tt:hover .n{color:var(--accent)}
 .stack{display:flex;flex-wrap:wrap;gap:6px}
 .stack span{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--line);border-radius:4px;font-size:11px;background:var(--panel2)}
 .stack img{width:14px;height:14px}
-.stackimg{display:block;width:100%;max-height:240px;object-fit:cover;border-radius:6px;margin-top:12px;border:1px solid var(--line2)}
-.sf-corner{position:absolute;top:14px;right:14px;width:44%;max-width:320px;height:96px;object-fit:cover;border-radius:7px;border:1px solid var(--line2);z-index:1}
-@media(max-width:600px){.sf-corner{position:static;width:100%;height:auto;max-height:150px;margin-top:12px;display:block}}
+.stackimg{position:absolute;right:14px;bottom:14px;width:auto;height:auto;max-width:120px;max-height:120px;object-fit:contain}
+@media(max-width:560px){.stackimg{position:static;right:auto;bottom:auto;margin:12px auto 0}}
+.sf-corner{position:absolute;top:16px;right:16px;width:auto;height:110px;max-width:130px;object-fit:contain;z-index:1}
+@media(max-width:600px){.sf-corner{position:static;width:auto;height:auto;max-width:110px;max-height:110px;margin-top:12px;display:block}}
 
 .btns{display:flex;flex-wrap:wrap;gap:6px}
 .btns a{display:block;width:88px;height:31px;border:1px solid var(--line2);border-radius:2px;background:linear-gradient(180deg,#1c1f29,#15171f);color:var(--text);font-size:10px;line-height:1.05;padding:4px}
@@ -788,6 +789,7 @@ async function loadPresence(){ try{
   const j=await (await fetch('https://api.lanyard.rest/v1/users/'+CONFIG.discordId)).json();
   if(!j.success) return;
   const du=j.data.discord_user||{};
+  if(du.avatar) $('#pf-av').src=`https://cdn.discordapp.com/avatars/${CONFIG.discordId}/${du.avatar}.webp?size=128`;
   const deco=du.avatar_decoration_data&&du.avatar_decoration_data.asset, decoEl=$('#pf-deco');
   if(deco){ decoEl.src=`https://cdn.discordapp.com/avatar-decoration-presets/${deco}.png?size=160&passthrough=true`; decoEl.style.display='block'; }
   else decoEl.style.display='none';
