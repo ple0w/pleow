@@ -48,7 +48,8 @@ a:hover{text-decoration:underline}
 .rule{display:flex;align-items:center;gap:8px;color:var(--dim2);font-size:11px;margin:12px 0 4px;letter-spacing:3px}
 .rule::before,.rule::after{content:"";height:1px;flex:1;background:repeating-linear-gradient(90deg,var(--line2) 0 4px,transparent 4px 8px)}
 
-.nav{position:sticky;top:0;z-index:40;display:flex;flex-wrap:wrap;justify-content:center;gap:2px;padding:8px 0;margin:0 -16px 4px;background:linear-gradient(var(--bg) 78%,transparent)}
+.nav{position:sticky;top:0;z-index:40;display:flex;flex-wrap:wrap;justify-content:center;gap:2px;padding:8px 0;margin:0 -16px 4px;background:transparent}
+body:not(.hasbg) .nav{background:linear-gradient(var(--bg) 78%,transparent)}
 .nav a{font-family:"VT323",monospace;font-size:22px;line-height:1;color:var(--dim);padding:3px 12px;cursor:pointer;position:relative}
 .nav a:hover{color:var(--text);text-decoration:none}
 .nav a.on{color:#fff}
@@ -56,6 +57,12 @@ a:hover{text-decoration:underline}
 .nav a.on::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:2px;background:var(--accent)}
 
 .card{position:relative;border:2px solid var(--line2);background:var(--panel);border-radius:3px;padding:16px 15px 15px;margin-top:26px;box-shadow:4px 4px 0 rgba(85,104,168,.28)}
+.wbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-16px -15px 13px;padding:3px 4px 3px 9px;background:linear-gradient(#f3f4f6,#d5d8dd);border-bottom:1px solid #0a0a0a;box-shadow:inset 1px 1px 0 #ffffff,inset -1px -1px 0 #8a8d94}
+.wbar .wtitle{font-family:"VT323",monospace;font-size:16px;line-height:1;letter-spacing:1.5px;text-transform:uppercase;color:#12131a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wbar .wbtns{display:flex;gap:3px;flex:0 0 auto}
+.wbar .wbtns b{display:flex;align-items:center;justify-content:center;width:17px;height:15px;background:#c3c7cb;color:#0a0a0a;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;line-height:1;cursor:default;user-select:none;border:1px solid #0a0a0a;box-shadow:inset 1px 1px 0 #fefefe,inset -1px -1px 0 #85878d}
+.wbar .wbtns b:hover{background:#d6d9dd}
+.wbar .wbtns b:active{box-shadow:inset 1px 1px 0 #85878d,inset -1px -1px 0 #fefefe}
 .card>.lbl{position:absolute;top:-9px;left:13px;background:var(--bg);padding:0 8px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent)}
 .card>.lbl.am{color:var(--amber)}
 
@@ -207,7 +214,7 @@ a.tt:hover .n{color:var(--accent)}
 .stack img{width:14px;height:14px}
 .stackimg{position:absolute;right:14px;bottom:14px;width:auto;height:auto;max-width:120px;max-height:120px;object-fit:contain}
 @media(max-width:560px){.stackimg{position:static;right:auto;bottom:auto;margin:12px auto 0}}
-.sf-corner{position:absolute;top:16px;right:16px;width:auto;height:110px;max-width:130px;object-fit:contain;z-index:1}
+.sf-corner{position:absolute;top:36px;right:16px;width:auto;height:110px;max-width:130px;object-fit:contain;z-index:1}
 @media(max-width:600px){.sf-corner{position:static;width:auto;height:auto;max-width:110px;max-height:110px;margin-top:12px;display:block}}
 
 .btns{display:flex;flex-wrap:wrap;gap:6px}
@@ -310,6 +317,9 @@ body.konami{animation:konamiFx 1s linear}
 #boot{position:fixed;inset:0;z-index:300;background:var(--bg);color:var(--accent);font-family:"JetBrains Mono",monospace;font-size:12px;padding:9vh 9vw;white-space:pre-wrap;line-height:1.8}
 #boot.done{animation:bootOut .5s ease forwards}
 @keyframes bootOut{to{opacity:0;visibility:hidden}}
+.wrap{transition:opacity .85s ease,transform .85s cubic-bezier(.2,.7,.3,1)}
+body.booting .wrap{opacity:0;transform:translateY(24px);pointer-events:none}
+body.booting .fab,body.booting .settings{opacity:0;pointer-events:none}
 
 .gb-form label{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;display:block;margin-top:8px}
 .gb-form input,.gb-form textarea{width:100%;background:var(--panel2);border:1px solid var(--line2);color:var(--text);font:inherit;font-size:12px;padding:8px 10px;border-radius:5px;margin-top:3px}
@@ -347,6 +357,7 @@ body.konami{animation:konamiFx 1s linear}
 </style>
 </head>
 <body>
+<!-- pleow build: INTRO-BGONLY-v2 -->
 <div id="bg-layer"></div><div id="bg-dim"></div>
 <div id="boot"></div>
 <button class="fab" id="fab" title="settings (⌘K for commands)">⚙</button>
@@ -549,10 +560,10 @@ const CONFIG = {
     interestsTitle: 'My Interests',
     interests: "FPS games like Counter-Strike, Roblox development, and tinkering with anything tech.",
   },
-  steam: { profileUrl: 'https://steamcommunity.com/id/pleow_', inventoryUrl: 'https://steamcommunity.com/id/pleow_/inventory/#730' },
+  steam: { profileUrl: 'https://steamcommunity.com/id/ple0w', inventoryUrl: 'https://steamcommunity.com/id/ple0w/inventory/#730' },
   statsfm: { user: 'pleow', url: 'https://stats.fm/pleow' },
   osu: { profileUrl: 'https://osu.ppy.sh/users/batuanfurkan5/mania' },
-  valorant: { trackerUrl: 'https://tracker.gg/valorant/profile/riot/aptal19%23VON/overview' },
+  valorant: { trackerUrl: 'https://tracker.gg/valorant/profile/riot/pleow%23bhop/overview' },
   weatherLat: 41.01, weatherLon: 28.98,
   background: 'img/background.gif',  
   profileCorner: 'img/kiz.png', 
@@ -560,15 +571,15 @@ const CONFIG = {
   statsfmImage: 'img/music.png',   
   statsfmAvatar: 'https://stats.fm/api/image?url=https%3A%2F%2Fcdn.stats.fm%2Ffile%2Fstatsfm%2Fimages%2Fusers%2Fdrvzl7m4xl8oa9y69t8vu7nea%2F486864ee15f15b33745260c2991c1ec9.webp&w=256&q=75&fallbackImg=https://cdn.stats.fm/file/statsfm/images/placeholders/users/private.webp', 
   links: [
-    { label:'Discord', url:'https://discord.com/users/748994546146345111', slug:'discord', sub:'@ple0w' },
-    { label:'Steam', url:'https://steamcommunity.com/id/pleow_', slug:'steam', sub:'pleow_' },
-    { label:'Spotify', url:'https://open.spotify.com/user/drvzl7m4xl8oa9y69t8vu7nea', slug:'spotify', sub:'playlists + history' },
-    { label:'Roblox', url:'https://www.roblox.com/users/1222447941/profile', slug:'roblox', sub:'profile' },
-    { label:'osu!', url:'https://osu.ppy.sh/users/20213041', slug:'osu', sub:'batuanfurkan5' },
-    { label:'Letterboxd', url:'https://boxd.it/kU5zD', slug:'letterboxd', sub:'film diary' },
-    { label:'stats.fm', url:'https://stats.fm/pleow', slug:'lastdotfm', sub:'listening stats' },
-    { label:'NameMC', url:'https://namemc.com/profile/pleow.1', slug:'namemc', sub:'pleow.1' },
-    { label:'GitHub', url:'https://github.com/ple0w', slug:'github', sub:'ple0w' },
+    { label:'Discord', url:'https://discord.com/users/748994546146345111', slug:'discord', sub:'  @ple0w' },
+    { label:'Steam', url:'https://steamcommunity.com/id/ple0w', slug:'steam', sub:'' },
+    { label:'Spotify', url:'https://open.spotify.com/user/drvzl7m4xl8oa9y69t8vu7nea', slug:'spotify', sub:'' },
+    { label:'Roblox', url:'https://www.roblox.com/users/1222447941/profile', slug:'roblox', sub:'' },
+    { label:'osu!', url:'https://osu.ppy.sh/users/20213041', slug:'osu', sub:'' },
+    { label:'Letterboxd', url:'https://boxd.it/kU5zD', slug:'letterboxd', sub:'' },
+    { label:'stats.fm', url:'https://stats.fm/pleow', slug:'lastdotfm', sub:'' },
+    { label:'NameMC', url:'https://namemc.com/profile/pleow.1', slug:'namemc', sub:'' },
+    { label:'GitHub', url:'https://github.com/ple0w', slug:'github', sub:'' },
   ],
   gear: [
     { cat:'KEYBOARD', name:'Gamepower Warlock Compact', icon:'\u2328\uFE0F' },
@@ -632,6 +643,14 @@ function enter(n){
 $$('[data-nav]').forEach(el=>el.addEventListener('click',()=>showPage(el.dataset.nav)));
 window.addEventListener('hashchange',()=>showPage(location.hash.slice(1)));
 showPage(location.hash.slice(1)||'home');
+document.querySelectorAll('.card').forEach(c=>{
+  const lbl=c.querySelector(':scope > .lbl');
+  const title=lbl?lbl.textContent.trim():'';
+  if(lbl) lbl.style.display='none';
+  const bar=document.createElement('div'); bar.className='wbar'; bar.setAttribute('aria-hidden','true');
+  bar.innerHTML='<span class="wtitle">'+esc(title)+'</span><div class="wbtns"><b class="x">\u00D7</b></div>';
+  c.insertBefore(bar,c.firstChild);
+});
 
 $('#pf-av').src=CONFIG.avatar; $('#sf-av').src=CONFIG.statsfmAvatar||CONFIG.avatar;
 $('#pf-name').textContent=CONFIG.name; $('#pf-handle').textContent=CONFIG.handle;
@@ -1101,14 +1120,26 @@ document.addEventListener('keydown',e=>{
   else if(e.key>='1'&&e.key<='6'){ const p=PAGES[+e.key-1]; if(p) showPage(p); }
 });
 
-(function(){ const el=$('#boot'); if(!el) return;
-  let booted=false; try{ booted=sessionStorage.getItem('pleow_booted'); }catch(e){}
-  if(booted){ el.remove(); return; }
-  try{ sessionStorage.setItem('pleow_booted','1'); }catch(e){}
+(function(){ const el=$('#boot');
+  /* --- intro timing (ms) — tweak these to taste --- */
+  const BOOT_LINE_MS=150;   // typing speed per line
+  const AFTER_TYPE_MS=420;  // pause after last line before boot fades
+  const BG_ONLY_MS=2000;    // background-only beat (boxes hidden) before reveal
+  /* reveal duration is the .wrap transition above (.85s) */
+  document.body.classList.add('booting');            /* hide boxes -> only bg/boot */
+  if(!el){ document.body.classList.remove('booting'); return; }
   const lines=['> pleow.exe','booting modules…','[ok] discord presence','[ok] stats.fm sync','[ok] steam bridge','[ok] guestbook','welcome :)'];
   let i=0; el.textContent='';
   const iv=setInterval(()=>{ el.textContent+=lines[i]+'\n'; i++;
-    if(i>=lines.length){ clearInterval(iv); setTimeout(()=>{ el.classList.add('done'); setTimeout(()=>el.remove(),520); },420); } },150);
+    if(i>=lines.length){ clearInterval(iv);
+      setTimeout(()=>{ el.classList.add('done'); setTimeout(()=>el.remove(),520);
+        /* boot now fading -> only background visible; hold, then reveal boxes */
+        setTimeout(()=>{ document.body.classList.remove('booting');
+          const pg=document.querySelector('.page.active');
+          if(pg){ pg.classList.remove('enter'); void pg.offsetWidth; pg.classList.add('enter'); }
+        }, BG_ONLY_MS);
+      }, AFTER_TYPE_MS);
+    } }, BOOT_LINE_MS);
 })();
 
 (function(){ const seq=[38,38,40,40,37,39,37,39,66,65]; let p=0;
