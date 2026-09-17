@@ -1,4 +1,3 @@
-// osu! v2 verisini çekip Cloudflare Worker'a gönderir
 const CLIENT_ID = process.env.OSU_CLIENT_ID;
 const CLIENT_SECRET = process.env.OSU_CLIENT_SECRET;
 const PUSH_SECRET = process.env.OSU_PUSH_SECRET;
@@ -7,7 +6,6 @@ const OSU_MODE = process.env.OSU_MODE || 'mania';
 const WORKER_URL = 'https://pleow-site.pqkalem.workers.dev/osu/push';
 
 async function main() {
-  // 1) token al
   const tokenRes = await fetch('https://osu.ppy.sh/oauth/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -20,8 +18,7 @@ async function main() {
   });
   if (!tokenRes.ok) throw new Error('token failed: ' + tokenRes.status);
   const { access_token } = await tokenRes.json();
-
-  // 2) kullanıcı verisi
+  
   const r = await fetch(`https://osu.ppy.sh/api/v2/users/${encodeURIComponent(OSU_USER)}/${OSU_MODE}`, {
     headers: { Authorization: `Bearer ${access_token}`, Accept: 'application/json' },
   });
@@ -57,7 +54,6 @@ async function main() {
     },
   };
 
-  // 3) Worker'a gönder
   const push = await fetch(WORKER_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${PUSH_SECRET}` },
