@@ -1000,7 +1000,12 @@ async function loadSteamLib(){ try{
     <div class="ov">${esc(g.name)} \u00b7 ${g.hours}h</div></a>`).join('');
 }catch(e){ $('#st-lib').innerHTML='<div class="load">unavailable.</div>'; } }
 async function loadInventory(){ try{
-  const d=await getJSON('/cs/inventory'); const grid=$('#inv-grid'), empty=$('#inv-empty');
+  let d=null; try{ d=await getJSON('/cs/inventory'); }catch(e){}
+  if(!d||!d.ok||!d.items||!d.items.length){
+    try{ const r=await fetch('cs-inventory.json',{cache:'no-store'}); if(r.ok){ const sj=await r.json(); if(sj&&sj.items&&sj.items.length) d=sj; } }catch(e){}
+  }
+  d=d||{ok:false,error:'unreachable'};
+  const grid=$('#inv-grid'), empty=$('#inv-empty');
   if(!d.ok||!d.items||!d.items.length){ grid.innerHTML=''; empty.style.display='block'; empty.textContent=(d&&d.error==='private_or_empty')?'inventory private or empty.':'inventory unavailable'+(d&&d.error?' ('+d.error+')':'')+'.'; return; }
   empty.style.display='none'; $('#inv-count').textContent=fmtNum(d.count||d.items.length);
   grid.innerHTML=d.items.slice(0,18).map(it=>`<div class="it" title="${esc(it.name)}" style="${it.rarity?`box-shadow:inset 0 -2px 0 #${it.rarity}`:''}">
