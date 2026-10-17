@@ -1028,6 +1028,7 @@ async function loadFaceit(){
     if(d.elo!=null) h+=`<div><div class="b">${fmtNum(d.elo)}</div><div class="l">elo</div></div>`;
     h+='</div></div></div>';
     const row=(k,v)=>v!=null&&v!==''?`<div class="kv"><span class="k">${k}</span><span class="v">${esc(v)}</span></div>`:'';
+    h+=row('peak',d.peak&&d.peak.elo?fmtNum(d.peak.elo)+' elo · lvl '+d.peak.level:null);
     h+=row('matches',s.matches!=null?fmtNum(s.matches):null);
     h+=row('win rate',s.winRate!=null?s.winRate+'%':null);
     h+=row('k/d',s.kd);
