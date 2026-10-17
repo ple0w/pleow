@@ -265,6 +265,10 @@ a.tt:hover .n{color:var(--accent)}
 .osu-grades .gr{font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:4px;padding:2px 8px;background:var(--panel2)}
 .osu-grades .gr b{color:var(--text)}
 .osu-grades .gr.ss b{color:#e6b3ff}.osu-grades .gr.s b{color:#9ec8ff}.osu-grades .gr.a b{color:#8fdcae}
+.fc-lvl{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;border-radius:50%;border:2px solid currentColor;font-family:"VT323",monospace;font-size:19px;line-height:1;background:#0b0c10}
+.fc-res{display:flex;gap:4px;margin-top:9px;align-items:center}
+.fc-res span{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#0c0d14}
+.fc-res span.w{background:var(--good)}.fc-res span.l{background:var(--bad)}
 
 #map{width:100%;height:300px;border:1px solid var(--line);border-radius:4px;background:#0a0b0f;overflow:hidden}
 #map svg{width:100%;height:100%}
@@ -491,18 +495,23 @@ body.booting .fab,body.booting .settings{opacity:0;pointer-events:none}
     </section>
     <div class="two">
       <section class="card">
+        <span class="lbl">faceit</span>
+        <div class="row sp" style="margin-bottom:6px"><span class="muted tiny">cs2</span><a class="tiny" id="fc-link" target="_blank" rel="noopener">faceit ↗</a></div>
+        <div id="fc-body" class="load">loading…</div>
+      </section>
+      <section class="card">
         <span class="lbl am">cs2 inventory</span>
         <div class="row sp"><span class="muted tiny"><b id="inv-count" style="color:var(--text)">—</b> items</span><a class="tiny" id="inv-link" target="_blank" rel="noopener">open ↗</a></div>
         <div id="inv-grid" class="invgrid" style="margin-top:8px"></div>
         <div id="inv-empty" class="load" style="display:none"></div>
       </section>
-      <section class="card">
-        <span class="lbl">valorant</span>
-        <div class="row sp"><span class="hdr" id="val-rank" style="margin:0">—</span><a class="tiny" id="val-link" target="_blank" rel="noopener">tracker ↗</a></div>
-        <div class="muted tiny" id="val-id">—</div>
-        <div id="val-body" style="margin-top:8px"></div>
-      </section>
     </div>
+    <section class="card">
+      <span class="lbl">valorant</span>
+      <div class="row sp"><span class="hdr" id="val-rank" style="margin:0">—</span><a class="tiny" id="val-link" target="_blank" rel="noopener">tracker ↗</a></div>
+      <div class="muted tiny" id="val-id">—</div>
+      <div id="val-body" style="margin-top:8px"></div>
+    </section>
     <section class="card">
       <span class="lbl am">osu!mania</span>
       <div class="row sp" style="margin-bottom:2px"><span class="muted tiny">profile</span><a class="tiny" id="osu-link" target="_blank" rel="noopener">osu ↗</a></div>
@@ -561,6 +570,8 @@ const CONFIG = {
     interests: "FPS games like Counter-Strike, Roblox development, and tinkering with anything tech.",
   },
   steam: { profileUrl: 'https://steamcommunity.com/id/ple0w', inventoryUrl: 'https://steamcommunity.com/id/ple0w/inventory/#730' },
+  // CS hesabı (ayrı hesap): faceit istatistikleri + skin envanteri buradan gelir
+  cs: { steamId: '76561199441806035', profileUrl: 'https://steamcommunity.com/profiles/76561199441806035', inventoryUrl: 'https://steamcommunity.com/profiles/76561199441806035/inventory/#730', faceitUrl: 'https://www.faceit.com' },
   statsfm: { user: 'pleow', url: 'https://stats.fm/pleow' },
   osu: { profileUrl: 'https://osu.ppy.sh/users/batuanfurkan5/mania' },
   valorant: { trackerUrl: 'https://tracker.gg/valorant/profile/riot/pleow%23bhop/overview' },
@@ -663,7 +674,7 @@ if(CONFIG.statsfmImage){ const si=$('#sf-img'); si.src=CONFIG.statsfmImage; si.s
 $('#ab-whot').textContent=CONFIG.about.whoTitle; $('#ab-who').textContent=CONFIG.about.who;
 $('#ab-intt').textContent=CONFIG.about.interestsTitle; $('#ab-int').textContent=CONFIG.about.interests;
 $('#mu-link').href=CONFIG.statsfm.url;
-$('#st-link').href=CONFIG.steam.profileUrl; $('#inv-link').href=CONFIG.steam.inventoryUrl;
+$('#st-link').href=CONFIG.steam.profileUrl; $('#inv-link').href=CONFIG.cs.inventoryUrl; $('#fc-link').href=CONFIG.cs.faceitUrl;
 $('#val-link').href=CONFIG.valorant.trackerUrl; $('#osu-link').href=CONFIG.osu.profileUrl;
 
 $('#lk-grid').innerHTML=CONFIG.links.map(l=>{const ic=/\./.test(l.slug)?l.slug:icon(l.slug);
@@ -989,12 +1000,38 @@ async function loadSteamLib(){ try{
     <div class="ov">${esc(g.name)} \u00b7 ${g.hours}h</div></a>`).join('');
 }catch(e){ $('#st-lib').innerHTML='<div class="load">unavailable.</div>'; } }
 async function loadInventory(){ try{
-  const d=await getJSON('/steam/inventory'); const grid=$('#inv-grid'), empty=$('#inv-empty');
+  const d=await getJSON('/cs/inventory'); const grid=$('#inv-grid'), empty=$('#inv-empty');
   if(!d.ok||!d.items||!d.items.length){ grid.innerHTML=''; empty.style.display='block'; empty.textContent='inventory private or empty.'; return; }
   empty.style.display='none'; $('#inv-count').textContent=fmtNum(d.count||d.items.length);
   grid.innerHTML=d.items.slice(0,18).map(it=>`<div class="it" title="${esc(it.name)}" style="${it.rarity?`box-shadow:inset 0 -2px 0 #${it.rarity}`:''}">
     <img src="${it.icon}" onerror="this.onerror=null;this.style.display='none'" alt=""></div>`).join('');
 }catch(e){ $('#inv-empty').style.display='block'; $('#inv-empty').textContent='unavailable.'; } }
+
+function fcColor(l){ return l>=10?'#ff5a3c':l>=8?'#ff8a3c':l>=4?'#f0c07a':l>=2?'#8fdcae':'#9aa0b4'; }
+async function loadFaceit(){
+  const box=$('#fc-body');
+  try{
+    const d=await getJSON('/cs/faceit');
+    if(!d||!d.ok){ box.className='load'; box.textContent=(d&&d.error==='not_found')?'no faceit cs2 profile on this account.':'unavailable.'; return; }
+    box.className='';
+    if(d.url) $('#fc-link').href=d.url;
+    const s=d.stats||{};
+    let h='<div class="osu-head">';
+    if(d.avatar) h+=`<img src="${esc(d.avatar)}" onerror="this.style.visibility='hidden'" alt="">`;
+    h+=`<div><div class="osu-name">${esc(d.nickname||'faceit')}</div><div class="osu-rank">`;
+    if(d.level!=null) h+=`<div><div class="b"><span class="fc-lvl" style="color:${fcColor(d.level)}">${esc(d.level)}</span></div><div class="l">level</div></div>`;
+    if(d.elo!=null) h+=`<div><div class="b">${fmtNum(d.elo)}</div><div class="l">elo</div></div>`;
+    h+='</div></div></div>';
+    const row=(k,v)=>v!=null&&v!==''?`<div class="kv"><span class="k">${k}</span><span class="v">${esc(v)}</span></div>`:'';
+    h+=row('matches',s.matches!=null?fmtNum(s.matches):null);
+    h+=row('win rate',s.winRate!=null?s.winRate+'%':null);
+    h+=row('k/d',s.kd);
+    h+=row('headshot',s.hs!=null?s.hs+'%':null);
+    h+=row('win streak',s.streak);
+    if(d.recent&&d.recent.length) h+='<div class="fc-res">'+d.recent.slice(0,10).map(r=>r==='1'||r===1?'<span class="w">W</span>':'<span class="l">L</span>').join('')+'</div>';
+    box.innerHTML=h;
+  }catch(e){ box.className='load'; box.textContent='unavailable.'; }
+}
 
 async function loadValorant(){ try{
   const [m,s]=await Promise.all([getJSON('/valorant').catch(()=>({})),getJSON('/valorant/stats').catch(()=>({}))]);
@@ -1051,7 +1088,7 @@ async function loadOsu(){
   }catch(e){ box.innerHTML='<div class="load">unavailable.</div>'; }
 }
 
-setTimeout(loadSteamRecent,150); setTimeout(loadSteamLib,400); setTimeout(loadInventory,700);
+setTimeout(loadSteamRecent,150); setTimeout(loadSteamLib,400); setTimeout(loadFaceit,550); setTimeout(loadInventory,700);
 setTimeout(loadValorant,950); setTimeout(loadOsu,1200);
 
 const ISO2NAME={"AF":"Afghanistan","AX":"Åland Islands","AL":"Albania","DZ":"Algeria","AS":"American Samoa","AD":"Andorra","AO":"Angola","AI":"Anguilla","AQ":"Antarctica","AG":"Antigua and Barbuda","AR":"Argentina","AM":"Armenia","AW":"Aruba","AU":"Australia","AT":"Austria","AZ":"Azerbaijan","BS":"Bahamas","BH":"Bahrain","BD":"Bangladesh","BB":"Barbados","BY":"Belarus","BE":"Belgium","BZ":"Belize","BJ":"Benin","BM":"Bermuda","BT":"Bhutan","BO":"Bolivia, Plurinational State of","BQ":"Bonaire, Sint Eustatius and Saba","BA":"Bosnia and Herzegovina","BW":"Botswana","BV":"Bouvet Island","BR":"Brazil","IO":"British Indian Ocean Territory","BN":"Brunei Darussalam","BG":"Bulgaria","BF":"Burkina Faso","BI":"Burundi","KH":"Cambodia","CM":"Cameroon","CA":"Canada","CV":"Cabo Verde","KY":"Cayman Islands","CF":"Central African Republic","TD":"Chad","CL":"Chile","CN":"China","CX":"Christmas Island","CC":"Cocos (Keeling) Islands","CO":"Colombia","KM":"Comoros","CG":"Congo","CD":"Congo, Democratic Republic of the","CK":"Cook Islands","CR":"Costa Rica","CI":"Côte d'Ivoire","HR":"Croatia","CU":"Cuba","CW":"Curaçao","CY":"Cyprus","CZ":"Czechia","DK":"Denmark","DJ":"Djibouti","DM":"Dominica","DO":"Dominican Republic","EC":"Ecuador","EG":"Egypt","SV":"El Salvador","GQ":"Equatorial Guinea","ER":"Eritrea","EE":"Estonia","ET":"Ethiopia","FK":"Falkland Islands (Malvinas)","FO":"Faroe Islands","FJ":"Fiji","FI":"Finland","FR":"France","GF":"French Guiana","PF":"French Polynesia","TF":"French Southern Territories","GA":"Gabon","GM":"Gambia","GE":"Georgia","DE":"Germany","GH":"Ghana","GI":"Gibraltar","GR":"Greece","GL":"Greenland","GD":"Grenada","GP":"Guadeloupe","GU":"Guam","GT":"Guatemala","GG":"Guernsey","GN":"Guinea","GW":"Guinea-Bissau","GY":"Guyana","HT":"Haiti","HM":"Heard Island and McDonald Islands","VA":"Holy See","HN":"Honduras","HK":"Hong Kong","HU":"Hungary","IS":"Iceland","IN":"India","ID":"Indonesia","IR":"Iran, Islamic Republic of","IQ":"Iraq","IE":"Ireland","IM":"Isle of Man","IL":"Israel","IT":"Italy","JM":"Jamaica","JP":"Japan","JE":"Jersey","JO":"Jordan","KZ":"Kazakhstan","KE":"Kenya","KI":"Kiribati","KP":"Korea, Democratic People's Republic of","KR":"Korea, Republic of","XK":"Kosovo","KW":"Kuwait","KG":"Kyrgyzstan","LA":"Lao People's Democratic Republic","LV":"Latvia","LB":"Lebanon","LS":"Lesotho","LR":"Liberia","LY":"Libya","LI":"Liechtenstein","LT":"Lithuania","LU":"Luxembourg","MO":"Macao","MK":"North Macedonia","MG":"Madagascar","MW":"Malawi","MY":"Malaysia","MV":"Maldives","ML":"Mali","MT":"Malta","MH":"Marshall Islands","MQ":"Martinique","MR":"Mauritania","MU":"Mauritius","YT":"Mayotte","MX":"Mexico","FM":"Micronesia, Federated States of","MD":"Moldova, Republic of","MC":"Monaco","MN":"Mongolia","ME":"Montenegro","MS":"Montserrat","MA":"Morocco","MZ":"Mozambique","MM":"Myanmar","NA":"Namibia","NR":"Nauru","NP":"Nepal","NL":"Netherlands","NC":"New Caledonia","NZ":"New Zealand","NI":"Nicaragua","NE":"Niger","NG":"Nigeria","NU":"Niue","NF":"Norfolk Island","MP":"Northern Mariana Islands","NO":"Norway","OM":"Oman","PK":"Pakistan","PW":"Palau","PS":"Palestine, State of","PA":"Panama","PG":"Papua New Guinea","PY":"Paraguay","PE":"Peru","PH":"Philippines","PN":"Pitcairn","PL":"Poland","PT":"Portugal","PR":"Puerto Rico","QA":"Qatar","RE":"Réunion","RO":"Romania","RU":"Russian Federation","RW":"Rwanda","BL":"Saint Barthélemy","SH":"Saint Helena, Ascension and Tristan da Cunha","KN":"Saint Kitts and Nevis","LC":"Saint Lucia","MF":"Saint Martin (French part)","PM":"Saint Pierre and Miquelon","VC":"Saint Vincent and the Grenadines","WS":"Samoa","SM":"San Marino","ST":"Sao Tome and Principe","SA":"Saudi Arabia","SN":"Senegal","RS":"Serbia","SC":"Seychelles","SL":"Sierra Leone","SG":"Singapore","SX":"Sint Maarten (Dutch part)","SK":"Slovakia","SI":"Slovenia","SB":"Solomon Islands","SO":"Somalia","ZA":"South Africa","GS":"South Georgia and the South Sandwich Islands","SS":"South Sudan","ES":"Spain","LK":"Sri Lanka","SD":"Sudan","SR":"Suriname","SJ":"Svalbard and Jan Mayen","SZ":"Eswatini","SE":"Sweden","CH":"Switzerland","SY":"Syrian Arab Republic","TW":"Taiwan, Province of China","TJ":"Tajikistan","TZ":"Tanzania, United Republic of","TH":"Thailand","TL":"Timor-Leste","TG":"Togo","TK":"Tokelau","TO":"Tonga","TT":"Trinidad and Tobago","TN":"Tunisia","TR":"Türkiye","TM":"Turkmenistan","TC":"Turks and Caicos Islands","TV":"Tuvalu","UG":"Uganda","UA":"Ukraine","AE":"United Arab Emirates","GB":"United Kingdom of Great Britain and Northern Ireland","US":"United States of America","UM":"United States Minor Outlying Islands","UY":"Uruguay","UZ":"Uzbekistan","VU":"Vanuatu","VE":"Venezuela, Bolivarian Republic of","VN":"Viet Nam","VG":"Virgin Islands, British","VI":"Virgin Islands, U.S.","WF":"Wallis and Futuna","EH":"Western Sahara","YE":"Yemen","ZM":"Zambia","ZW":"Zimbabwe"};
